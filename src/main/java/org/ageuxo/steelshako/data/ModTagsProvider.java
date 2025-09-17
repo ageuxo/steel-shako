@@ -1,0 +1,41 @@
+package org.ageuxo.steelshako.data;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.ageuxo.steelshako.ModTags;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
+
+public class ModTagsProvider {
+
+    public static class Block extends BlockTagsProvider {
+
+        public Block(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, modId, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider provider) {
+
+        }
+    }
+
+    public static class Item extends ItemTagsProvider {
+
+        public Item(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<net.minecraft.world.level.block.Block>> blockTags, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, blockTags, modId, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider provider) {
+            this.tag(ModTags.LASER_AMMO)
+                    .add(Items.REDSTONE);
+        }
+    }
+}
