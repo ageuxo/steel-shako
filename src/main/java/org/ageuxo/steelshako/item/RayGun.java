@@ -6,6 +6,7 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.ageuxo.steelshako.ModTags;
+import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.entity.projectile.Ray;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,7 @@ public class RayGun extends BowItem {
 
     @Override
     protected @NotNull Projectile createProjectile(@NotNull Level level, @NotNull LivingEntity shooter, @NotNull ItemStack weapon, @NotNull ItemStack ammo, boolean isCrit) {
-        Ray ray = new Ray(level);
+        Ray ray = new Ray(ModEntityTypes.RAY.get(), level);
         ray.setPos(shooter.getEyePosition());
         ray.setDamage(4); // TODO set damage from stacks
         return ray;
