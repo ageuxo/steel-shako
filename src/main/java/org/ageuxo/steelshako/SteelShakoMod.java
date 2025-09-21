@@ -3,6 +3,7 @@ package org.ageuxo.steelshako;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import org.ageuxo.steelshako.attachment.ModAttachments;
 import org.ageuxo.steelshako.data.DataProviders;
 import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.item.ModItems;
@@ -14,6 +15,7 @@ public class SteelShakoMod {
 
     public SteelShakoMod(IEventBus modEventBus) {
         ModItems.ITEMS.register(modEventBus);
+        ModAttachments.ATTACHMENTS.register(modEventBus);
         ModEntityTypes.ENTITIES.register(modEventBus);
         modEventBus.addListener(DataProviders::registerDataProviders);
     }
