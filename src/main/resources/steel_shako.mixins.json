@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "steel_shako.refmap.json",
+  "package": "org.ageuxo.steelshako.mixin",
+  "mixins": [
+    "MixinServerLevel"
+  ],
+  "client": [],
+  "server": [],
+  "minVersion": "0.8"
+}
