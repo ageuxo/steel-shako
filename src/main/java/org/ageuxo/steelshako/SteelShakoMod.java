@@ -7,6 +7,8 @@ import org.ageuxo.steelshako.attachment.ModAttachments;
 import org.ageuxo.steelshako.data.DataProviders;
 import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.item.ModItems;
+import org.ageuxo.steelshako.item.component.ModComponents;
+import org.ageuxo.steelshako.network.ModPayloads;
 
 @Mod(SteelShakoMod.MOD_ID)
 public class SteelShakoMod {
@@ -17,7 +19,9 @@ public class SteelShakoMod {
         ModItems.ITEMS.register(modEventBus);
         ModAttachments.ATTACHMENTS.register(modEventBus);
         ModEntityTypes.ENTITIES.register(modEventBus);
+        ModComponents.COMPONENTS.register(modEventBus);
         modEventBus.addListener(DataProviders::registerDataProviders);
+        modEventBus.addListener(ModPayloads::register);
     }
 
     public static ResourceLocation modRL(String path) {

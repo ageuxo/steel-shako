@@ -16,7 +16,7 @@ public abstract class MixinServerLevel {
     public void tickChunk(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
         MiningRayCache rayCache = chunk.getData(ModAttachments.MINING_RAY_CACHE);
         if (!rayCache.isEmpty()) {
-            rayCache.tickCooling();
+            rayCache.tickCooling((ServerLevel) chunk.getLevel(), chunk);
         }
     }
 

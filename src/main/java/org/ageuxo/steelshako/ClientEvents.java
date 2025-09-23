@@ -5,8 +5,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.entity.render.RayRenderer;
+import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = SteelShakoMod.MOD_ID)
 public class ClientEvents {
@@ -19,6 +21,14 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerModels(ModelEvent.RegisterAdditional event) {
         event.register(RayRenderer.MODEL);
+    }
+
+    @SubscribeEvent
+    public static void onRenderLevel(RenderLevelStageEvent event) {
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
+            MiningRayProgressRenderer.render(event.getPoseStack(), event.getCamera());
+        }
+
     }
 
 }
