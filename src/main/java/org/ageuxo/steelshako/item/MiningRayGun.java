@@ -27,13 +27,13 @@ import org.ageuxo.steelshako.item.component.ModComponents;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-public class RayGun extends Item implements ChargeHolder {
+public class MiningRayGun extends Item implements ChargeHolder {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static int RAMPUP_TIME = 30;
     public static int RAY_TICK_CHARGE_COST = 10;
     public static int RAY_RANGE = 10;
 
-    public RayGun(Properties properties) {
+    public MiningRayGun(Properties properties) {
         super(properties);
     }
 
