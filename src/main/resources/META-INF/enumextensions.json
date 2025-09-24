@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "STEEL_SHAKO_RAYGUN",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "org/ageuxo/steelshako/render/ArmPoseExtension",
+        "field": "RAYGUN_ARMPOSE_PROXY"
+      }
+    }
+  ]
+}

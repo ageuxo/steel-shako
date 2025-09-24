@@ -1,14 +1,24 @@
 package org.ageuxo.steelshako;
 
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.entity.render.RayRenderer;
+import org.ageuxo.steelshako.item.ModItems;
+import org.ageuxo.steelshako.render.ArmPoseExtension;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = SteelShakoMod.MOD_ID)
 public class ClientEvents {
@@ -29,6 +39,17 @@ public class ClientEvents {
             MiningRayProgressRenderer.render(event.getPoseStack(), event.getCamera());
         }
 
+    }
+
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new IClientItemExtensions() {
+            @Nullable
+            @Override
+            public HumanoidModel.ArmPose getArmPose(@NotNull LivingEntity entityLiving, @NotNull InteractionHand hand, @NotNull ItemStack itemStack) {
+                return ArmPoseExtension.RAYGUN_ARMPOSE_PROXY.getValue();
+            }
+        }, ModItems.RAY_GUN.get());
     }
 
 }
