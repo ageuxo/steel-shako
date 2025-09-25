@@ -6,7 +6,9 @@
   "mixins": [
     "MixinServerLevel"
   ],
-  "client": [],
+  "client": [
+    "AutoGlowingTextureAccessor"
+  ],
   "server": [],
   "minVersion": "0.8"
 }
