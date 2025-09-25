@@ -158,16 +158,6 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
         return UseAnim.CUSTOM;
     }
 
-    public int getCharge() {
-        ChargeComponent component = this.components().get(ModComponents.CHARGE.get());
-        return component != null ? component.charge() : 0;
-    }
-
-    public int getMaxCharge() {
-        ChargeComponent component = this.components().get(ModComponents.CHARGE.get());
-        return component != null ? component.maxCharge() : 0;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "firing", state -> state.isCurrentAnimation(SPINNING_ANIM) ? PlayState.CONTINUE : PlayState.STOP)
