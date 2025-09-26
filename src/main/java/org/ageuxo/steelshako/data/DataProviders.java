@@ -35,6 +35,10 @@ public class DataProviders {
                 event.includeServer(), new ModItemModelProvider(output, fileHelper)
         );
 
+        generator.addProvider(
+                event.includeServer(), new ModParticleDescriptionProvider(output, fileHelper)
+                );
+
         // DataPack object provider
         generator.addProvider(
                 event.includeServer(),

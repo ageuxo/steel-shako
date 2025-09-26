@@ -9,6 +9,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -17,6 +18,8 @@ import org.ageuxo.steelshako.entity.render.RayRenderer;
 import org.ageuxo.steelshako.item.ModItems;
 import org.ageuxo.steelshako.render.ArmPoseExtension;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
+import org.ageuxo.steelshako.render.particle.ModParticles;
+import org.ageuxo.steelshako.render.particle.provider.RayParticleProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,6 +53,11 @@ public class ClientEvents {
                 return ArmPoseExtension.RAYGUN_ARMPOSE_PROXY.getValue();
             }
         }, ModItems.RAY_GUN.get());
+    }
+
+    @SubscribeEvent
+    public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticles.MINING_RAY_BEAM.get(), RayParticleProvider::new);
     }
 
 }
