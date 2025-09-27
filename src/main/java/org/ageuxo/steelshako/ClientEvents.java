@@ -1,7 +1,10 @@
 package org.ageuxo.steelshako;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -17,6 +20,7 @@ import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.entity.render.RayRenderer;
 import org.ageuxo.steelshako.item.ModItems;
 import org.ageuxo.steelshako.render.ArmPoseExtension;
+import org.ageuxo.steelshako.render.ItemHandPoses;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
 import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.ageuxo.steelshako.render.particle.provider.RayParticleProvider;
@@ -51,6 +55,12 @@ public class ClientEvents {
             @Override
             public HumanoidModel.ArmPose getArmPose(@NotNull LivingEntity entityLiving, @NotNull InteractionHand hand, @NotNull ItemStack itemStack) {
                 return ArmPoseExtension.RAYGUN_ARMPOSE_PROXY.getValue();
+            }
+
+            @Override
+            public boolean applyForgeHandTransform(@NotNull PoseStack poseStack, @NotNull LocalPlayer player, @NotNull HumanoidArm arm, @NotNull ItemStack itemInHand, float partialTick, float equipProcess, float swingProcess) {
+                ItemHandPoses.applyItemArmTransform(poseStack, arm, equipProcess);
+                return true;
             }
         }, ModItems.RAY_GUN.get());
     }
