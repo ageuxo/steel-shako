@@ -7,6 +7,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -60,6 +62,20 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
     }
 
     @Override
+    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+        var player = context.getPlayer();
+        var usedHand = context.getHand();
+        var level = context.getLevel();
+        if (player != null && player.getUseItem().getItem() != this){
+            player.startUsingItem(usedHand);
+            if (level instanceof ServerLevel serverLevel) {
+                triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
+            }
+        }
+        return InteractionResult.CONSUME;
+    }
+
+    @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
         if (player.getUseItem().getItem() != this){
             player.startUsingItem(usedHand);
@@ -67,7 +83,7 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
                 triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
             }
         }
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResultHolder.consume(player.getItemInHand(usedHand));
     }
 
     @Override
