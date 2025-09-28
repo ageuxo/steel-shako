@@ -83,7 +83,7 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
                 triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
             }
         }
-        return InteractionResultHolder.consume(player.getItemInHand(usedHand));
+        return InteractionResultHolder.fail(player.getItemInHand(usedHand)); // Fail here works like consume does in other interaction methods
     }
 
     @Override
@@ -176,6 +176,11 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
     @Override
     public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.CUSTOM;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(@NotNull ItemStack oldStack, @NotNull ItemStack newStack, boolean slotChanged) {
+        return slotChanged || !ItemStack.isSameItem(oldStack, newStack) || !(oldStack.getCount() == newStack.getCount());
     }
 
     @Override
