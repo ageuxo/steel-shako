@@ -5,8 +5,16 @@ import org.ageuxo.steelshako.item.component.ChargeComponent;
 import org.ageuxo.steelshako.item.component.ModComponents;
 
 public interface ChargeHolder {
-    int getCharge();
-    int getMaxCharge();
+
+    default int getCharge(ItemStack stack) {
+        ChargeComponent component = stack.getComponents().get(ModComponents.CHARGE.get());
+        return component != null ? component.charge() : 0;
+    }
+
+    default int getMaxCharge(ItemStack stack) {
+        ChargeComponent component = stack.getComponents().get(ModComponents.CHARGE.get());
+        return component != null ? component.maxCharge() : 0;
+    }
 
     default int extractCharge(ItemStack stack, int amount) {
         ChargeComponent component = stack.getComponents().get(ModComponents.CHARGE.get());

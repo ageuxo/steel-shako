@@ -7,6 +7,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -27,6 +29,7 @@ import org.ageuxo.steelshako.charge.ChargeHolder;
 import org.ageuxo.steelshako.item.component.ChargeComponent;
 import org.ageuxo.steelshako.item.component.ModComponents;
 import org.ageuxo.steelshako.render.geo.MiningRayGunRenderer;
+import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -45,7 +48,7 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static int RAMPUP_TIME = 30;
     public static int RAY_TICK_CHARGE_COST = 10;
-    public static int RAY_RANGE = 10;
+    public static int RAY_RANGE = 40;
 
     private static final RawAnimation SPIN_UP_ANIM = RawAnimation.begin().thenPlay("spin_up");
     private static final RawAnimation SPINNING_ANIM = RawAnimation.begin().thenLoop("spinning");
@@ -59,6 +62,20 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
     }
 
     @Override
+    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+        var player = context.getPlayer();
+        var usedHand = context.getHand();
+        var level = context.getLevel();
+        if (player != null && player.getUseItem().getItem() != this){
+            player.startUsingItem(usedHand);
+            if (level instanceof ServerLevel serverLevel) {
+                triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
+            }
+        }
+        return InteractionResult.CONSUME;
+    }
+
+    @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
         if (player.getUseItem().getItem() != this){
             player.startUsingItem(usedHand);
@@ -66,7 +83,7 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
                 triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
             }
         }
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResultHolder.fail(player.getItemInHand(usedHand)); // Fail here works like consume does in other interaction methods
     }
 
     @Override
@@ -107,6 +124,7 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
         EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(shooter, eyePos, rayEnd, new AABB(0.6, 0.6, 0.6, 0.10, 0.10, 0.10), (Entity entity) -> canHitEntity(shooter, entity), RAY_RANGE);
 
         if (entityHitResult != null && entityHitResult.getType() == HitResult.Type.ENTITY) { // If hit entity, do damage
+            rayEnd = entityHitResult.getLocation();
             RegistryAccess registryAccess = level.registryAccess();
             var damageSource = new DamageSource(registryAccess.registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.MINING_RAY),
                     null,
@@ -114,6 +132,7 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
             );
             entityHitResult.getEntity().hurt(damageSource, 0.001f); // TODO replace with setting on fire?
         } else if (hitResult.getType() != HitResult.Type.MISS){ // If hit block, do mining
+            rayEnd = hitResult.getLocation();
             BlockPos hitPos = hitResult.getBlockPos();
             LOGGER.debug("ray end: {}, hit pos: {}", rayEnd, hitPos);
             LevelChunk chunk = level.getChunkAt(hitPos);
@@ -122,6 +141,7 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
             LOGGER.debug("Adding progress to {}, heat: {}", hitPos, rayCache.blockHeat(hitPos));
             chunk.setData(ModAttachments.MINING_RAY_CACHE, rayCache);
         }
+        level.addParticle(ModParticles.MINING_RAY_BEAM.get(), eyePos.x, eyePos.y, eyePos.z, rayEnd.x, rayEnd.y, rayEnd.z);
     }
 
     protected boolean canHitEntity(LivingEntity shooter, Entity target) {
@@ -158,14 +178,9 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
         return UseAnim.CUSTOM;
     }
 
-    public int getCharge() {
-        ChargeComponent component = this.components().get(ModComponents.CHARGE.get());
-        return component != null ? component.charge() : 0;
-    }
-
-    public int getMaxCharge() {
-        ChargeComponent component = this.components().get(ModComponents.CHARGE.get());
-        return component != null ? component.maxCharge() : 0;
+    @Override
+    public boolean shouldCauseReequipAnimation(@NotNull ItemStack oldStack, @NotNull ItemStack newStack, boolean slotChanged) {
+        return slotChanged || !ItemStack.isSameItem(oldStack, newStack) || !(oldStack.getCount() == newStack.getCount());
     }
 
     @Override
