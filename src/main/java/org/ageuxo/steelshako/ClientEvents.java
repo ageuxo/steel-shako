@@ -3,6 +3,7 @@ package org.ageuxo.steelshako;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,8 +15,10 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import org.ageuxo.steelshako.block.ModFluids;
 import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.entity.render.RayRenderer;
 import org.ageuxo.steelshako.item.ModItems;
@@ -63,6 +66,18 @@ public class ClientEvents {
                 return true;
             }
         }, ModItems.RAY_GUN.get());
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public @NotNull ResourceLocation getStillTexture() {
+                return SteelShakoMod.modRL("block/fluid/gruel_still");
+            }
+
+            @Override
+            public @NotNull ResourceLocation getFlowingTexture() {
+                return SteelShakoMod.modRL("block/fluid/gruel_flowing");
+            }
+        }, ModFluids.GRUEL_TYPE);
     }
 
     @SubscribeEvent
