@@ -27,7 +27,15 @@ public class TemplateUtils {
         BoundingBox box = template.getBoundingBox(settings, centeredPos);
 
         if (structureFits(level, box)){
-            return template.placeInWorld(level, centeredPos, centeredPos, settings, level.random, Block.UPDATE_ALL);
+            boolean placed = template.placeInWorld(level, centeredPos, centeredPos, settings, level.random, Block.UPDATE_ALL);
+            if (placed) {
+                for (BlockPos placePos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
+                    if (level.getBlockEntity(placePos) instanceof MultiblockDelegate delegate) {
+                        delegate.initDelegate(centeredPos);
+                    }
+                }
+                return true;
+            }
         }
 
         return false;
@@ -48,7 +56,6 @@ public class TemplateUtils {
         return rotation;
     }
 
-
     public static boolean structureFits(Level level, BoundingBox box) {
         for (BlockPos blockPos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
             BlockState state = level.getBlockState(blockPos);
@@ -56,10 +63,6 @@ public class TemplateUtils {
                 return false;
             }
         }
-        if (!level.getEntities(null, new AABB(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())).isEmpty()) {
-            return false;
-        }
-
-        return true;
+        return level.getEntities(null, new AABB(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())).isEmpty();
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import org.ageuxo.steelshako.block.be.VatBlockEntity;
+import org.ageuxo.steelshako.block.be.VatPlaceholderBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,8 +39,9 @@ public class VatBlock extends Block implements EntityBlock {
         VatPart part = state.getValue(VatPart.PROPERTY);
         if (part == VatPart.CORE) {
             return new VatBlockEntity(pos, state);
+        } else {
+            return new VatPlaceholderBlockEntity(pos, state);
         }
-        return null;
     }
 
     @Override

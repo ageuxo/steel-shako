@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.ageuxo.steelshako.block.multi.MultiblockDelegate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3i;
@@ -16,7 +17,7 @@ import org.joml.Vector3i;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class VatPlaceholderBlockEntity extends BlockEntity {
+public class VatPlaceholderBlockEntity extends BlockEntity implements MultiblockDelegate {
 
     private final Vector3i coreOffset = new Vector3i();
 
@@ -58,5 +59,11 @@ public class VatPlaceholderBlockEntity extends BlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         coreOffset.set(tag.getIntArray("core_offset"));
+    }
+
+    @Override
+    public void initDelegate(BlockPos corePos) {
+        BlockPos pos = this.getBlockPos();
+        this.coreOffset.set( corePos.getX() - pos.getX(), corePos.getY() - pos.getY(), corePos.getZ() - pos.getZ());
     }
 }
