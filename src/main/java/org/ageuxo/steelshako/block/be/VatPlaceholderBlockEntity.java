@@ -29,7 +29,7 @@ public class VatPlaceholderBlockEntity extends BlockEntity {
         //noinspection DataFlowIssue
         BlockEntity blockEntity = this.level.getBlockEntity(this.getBlockPos().offset(this.coreOffset.x, this.coreOffset.y, this.coreOffset.z));
         if (blockEntity instanceof VatBlockEntity vat) {
-            return vat.fuelStorage();
+            return vat.getItemCap(this.getBlockState(), side);
         }
         return null;
     }
@@ -38,7 +38,7 @@ public class VatPlaceholderBlockEntity extends BlockEntity {
         //noinspection DataFlowIssue
         BlockEntity blockEntity = this.level.getBlockEntity(this.getBlockPos().offset(this.coreOffset.x, this.coreOffset.y, this.coreOffset.z));
         if (blockEntity instanceof VatBlockEntity vat) {
-            return vat.waterTank();
+            return vat.getFluidCap(this.getBlockState(), side);
         }
         return null;
     }
