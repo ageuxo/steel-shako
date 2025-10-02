@@ -2,43 +2,41 @@ package org.ageuxo.steelshako.block.multi;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.ageuxo.steelshako.SteelShakoMod;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3i;
 
 import java.util.Locale;
 
 public enum MultiBlockType implements StringRepresentable {
     GRUEL_VAT("multiblock/gruel_vat", 4, 3, 4);
 
-    public static final EnumProperty<MultiBlockType> PROPERTY = EnumProperty.create("multiblock_type", MultiBlockType.class);
-
     private final ResourceLocation location;
-    private final int x;
-    private final int y;
-    private final int z;
+    private final Vector3i size;
 
     MultiBlockType(String path, int x, int y, int z) {
         this.location = SteelShakoMod.modRL(path);
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.size = new Vector3i(x, y, z);
     }
 
     public ResourceLocation location() {
         return location;
     }
 
+    public Vector3i size() {
+        return size;
+    }
+
     public int x() {
-        return x;
+        return size.x;
     }
 
     public int y() {
-        return y;
+        return size.y;
     }
 
     public int z() {
-        return z;
+        return size.z;
     }
 
     @Override
