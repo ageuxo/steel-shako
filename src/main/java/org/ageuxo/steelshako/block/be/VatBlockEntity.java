@@ -32,8 +32,6 @@ public class VatBlockEntity extends BlockEntity {
         }
     };
 
-    private Direction facing;
-
     public VatBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.GRUEL_VAT.get(), pos, blockState);
     }
@@ -77,7 +75,6 @@ public class VatBlockEntity extends BlockEntity {
         this.waterTank.writeToNBT(registries, tag);
 
         tag.put("fuel", this.fuelStorage.serializeNBT(registries));
-        tag.putString("facing", this.facing.getSerializedName());
     }
 
     @Override
@@ -85,14 +82,6 @@ public class VatBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries);
         this.waterTank.readFromNBT(registries, tag);
         this.fuelStorage.deserializeNBT(registries, tag.getCompound("fuel"));
-        Direction facing = Direction.byName(tag.getString("facing"));
-        if (facing != null) {
-            this.facing = facing;
-        }
-    }
-
-    public void setFacing(Direction facing) {
-        this.facing = facing;
     }
 
 }

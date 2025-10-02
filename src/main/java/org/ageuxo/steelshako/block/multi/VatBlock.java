@@ -1,14 +1,18 @@
 package org.ageuxo.steelshako.block.multi;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import org.ageuxo.steelshako.block.be.VatBlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +29,7 @@ public class VatBlock extends Block implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(VatPart.PROPERTY);
+        builder.add(VatPart.PROPERTY).add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @Nullable
@@ -47,5 +51,17 @@ public class VatBlock extends Block implements EntityBlock {
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Override
+    protected @NotNull BlockState mirror(BlockState state, Mirror mirror) {
+        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, mirror.mirror(facing));
+    }
+
+    @Override
+    protected @NotNull BlockState rotate(BlockState state, Rotation rotation) {
+        Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(facing));
     }
 }
