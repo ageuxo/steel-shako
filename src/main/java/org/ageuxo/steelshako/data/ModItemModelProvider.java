@@ -15,6 +15,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        withExistingParent(ModItems.RAY_GUN.getId().toString(), "builtin/entity");
+
+        withExistingParent(ModItems.GRUEL_BUCKET.getId().toString(), mcLoc("item/generated"))
+                .texture("layer1", modLoc("item/gruel_bucket_mask"))
+                .texture("layer0", mcLoc("item/bucket"));
+
     }
 }
