@@ -32,6 +32,10 @@ public class DataProviders {
         );
 
         generator.addProvider(
+                event.includeServer(), new ModBlockStateProvider(output, fileHelper)
+        );
+
+        generator.addProvider(
                 event.includeServer(), new ModItemModelProvider(output, fileHelper)
         );
 

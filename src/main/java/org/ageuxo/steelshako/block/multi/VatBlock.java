@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -25,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class VatBlock extends Block implements EntityBlock {
 
     public VatBlock(Properties properties) {
-        super(properties);
+        super(properties.noOcclusion().isViewBlocking((state, level, pos) -> false));
     }
 
     @Override
@@ -49,7 +50,17 @@ public class VatBlock extends Block implements EntityBlock {
         VatPart part = state.getValue(VatPart.PROPERTY);
         if (part == VatPart.FURNACE) {
             // TODO open furnace menu
+            level.blockUpdated(pos, state.getBlock());
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof VatPlaceholderBlockEntity vatBlockEntity) {
+                vatBlockEntity.requestModelDataUpdate();
+            }
             return InteractionResult.SUCCESS_NO_ITEM_USED;
+        } else if (part == VatPart.CORE) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof VatBlockEntity vatBlockEntity) {
+                vatBlockEntity.requestModelDataUpdate();
+            }
         }
 
         return InteractionResult.PASS;
@@ -66,4 +77,16 @@ public class VatBlock extends Block implements EntityBlock {
         Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
         return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(facing));
     }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        return 1.0F;
+    }
+
+
 }

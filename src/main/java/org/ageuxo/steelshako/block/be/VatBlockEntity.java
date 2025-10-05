@@ -3,6 +3,7 @@ package org.ageuxo.steelshako.block.be;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
@@ -17,8 +18,10 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.ageuxo.steelshako.block.multi.MultiBlockType;
+import org.ageuxo.steelshako.block.multi.MultiblockCore;
 import org.ageuxo.steelshako.block.multi.MultiblockDelegate;
 import org.ageuxo.steelshako.block.multi.VatPart;
+import org.ageuxo.steelshako.render.model.ModelProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3i;
@@ -26,7 +29,7 @@ import org.joml.Vector3i;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class VatBlockEntity extends BlockEntity {
+public class VatBlockEntity extends BlockEntity implements MultiblockCore {
 
     private final FluidTank waterTank = new FluidTank(16000, f -> f.is(FluidTags.WATER));
     private final FluidTank slopTank = new FluidTank(16000);
@@ -69,6 +72,11 @@ public class VatBlockEntity extends BlockEntity {
         return null;
     }
 
+    @Override
+    public void initCore() {
+
+    }
+
     protected void initialiseDelegates() {
         if (this.level instanceof ServerLevel serverLevel) {
             Vector3i size = MultiBlockType.GRUEL_VAT.size();
@@ -95,7 +103,16 @@ public class VatBlockEntity extends BlockEntity {
 
     @Override
     public @NotNull ModelData getModelData() {
-        return super.getModelData(); // TODO is this what should determine placeholder models?
+        return ModelData.builder()
+                .with(ModelProperties.OFFSET_PROP, new Vec3i(0, 0, 0))
+                .build();
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
     }
 
     @Override

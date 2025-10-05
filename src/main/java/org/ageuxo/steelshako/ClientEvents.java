@@ -25,6 +25,7 @@ import org.ageuxo.steelshako.item.ModItems;
 import org.ageuxo.steelshako.render.ArmPoseExtension;
 import org.ageuxo.steelshako.render.ItemHandPoses;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
+import org.ageuxo.steelshako.render.model.MultiblockGeometryLoader;
 import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.ageuxo.steelshako.render.particle.provider.RayParticleProvider;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,11 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.RAY.get(), RayRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
+        event.register(MultiblockGeometryLoader.ID, MultiblockGeometryLoader.INSTANCE);
     }
 
     @SubscribeEvent
