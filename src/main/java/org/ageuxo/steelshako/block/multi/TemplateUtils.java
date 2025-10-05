@@ -32,7 +32,8 @@ public class TemplateUtils {
             if (placed) {
                 for (BlockPos placePos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
                     if (level.getBlockEntity(placePos) instanceof MultiblockDelegate delegate) {
-                        delegate.initDelegate(centeredPos);
+                        BlockPos extraCenteredPos = centeredPos.offset(-1, 0, -1);
+                        delegate.initDelegate(extraCenteredPos);
                     }
                 }
                 return true;

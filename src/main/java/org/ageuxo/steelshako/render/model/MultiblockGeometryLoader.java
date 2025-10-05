@@ -53,7 +53,7 @@ public class MultiblockGeometryLoader implements IGeometryLoader<MultiblockGeome
             int z = posObj.get("z").getAsInt();
             Set<BlockElement> value = groupElementsMap.get(jsonPosEntry.getKey());
             if (value == null) throw new JsonParseException("'group_positions' missing offset mapping for '%s' group!".formatted(jsonPosEntry.getKey()));
-            offsetToElementsMap.put(new Vec3i(x / 8, y / 8, z / 8), value);
+            offsetToElementsMap.put(new Vec3i(x, y, z), value);
         }
 
         return new MultiblockGeometry(offsetToElementsMap, groupElementsMap);

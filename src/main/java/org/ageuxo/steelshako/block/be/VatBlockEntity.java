@@ -104,7 +104,7 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
     @Override
     public @NotNull ModelData getModelData() {
         return ModelData.builder()
-                .with(ModelProperties.OFFSET_PROP, new Vec3i(0, 0, 0))
+                .with(ModelProperties.OFFSET_PROP, new Vec3i(1, 0, 1))
                 .build();
     }
 

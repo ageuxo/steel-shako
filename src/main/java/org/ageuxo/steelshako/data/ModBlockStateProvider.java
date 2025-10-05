@@ -23,7 +23,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
                     return ConfiguredModel.builder()
                             .modelFile(models().getExistingFile(SteelShakoMod.modRL("block/multiblock/gruelshroom_vat")))
-                            .rotationY((int) facing.toYRot())
+                            .rotationY(((int) facing.toYRot() - 180) % 360)
                             .build();
 
                 });

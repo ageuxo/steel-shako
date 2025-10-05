@@ -57,6 +57,8 @@ public class ClientEvents {
 
     }
 
+
+
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(new IClientItemExtensions() {
