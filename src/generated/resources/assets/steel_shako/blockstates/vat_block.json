@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=east,vat_part=core": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": 90
+    },
+    "facing=east,vat_part=furnace": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": 90
+    },
+    "facing=east,vat_part=placeholder": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": 90
+    },
+    "facing=east,vat_part=tank": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": 90
+    },
+    "facing=east,vat_part=tap": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": 90
+    },
+    "facing=east,vat_part=vat": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": 90
+    },
+    "facing=north,vat_part=core": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat"
+    },
+    "facing=north,vat_part=furnace": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat"
+    },
+    "facing=north,vat_part=placeholder": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat"
+    },
+    "facing=north,vat_part=tank": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat"
+    },
+    "facing=north,vat_part=tap": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat"
+    },
+    "facing=north,vat_part=vat": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat"
+    },
+    "facing=south,vat_part=core": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -180
+    },
+    "facing=south,vat_part=furnace": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -180
+    },
+    "facing=south,vat_part=placeholder": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -180
+    },
+    "facing=south,vat_part=tank": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -180
+    },
+    "facing=south,vat_part=tap": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -180
+    },
+    "facing=south,vat_part=vat": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -180
+    },
+    "facing=west,vat_part=core": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -90
+    },
+    "facing=west,vat_part=furnace": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -90
+    },
+    "facing=west,vat_part=placeholder": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -90
+    },
+    "facing=west,vat_part=tank": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -90
+    },
+    "facing=west,vat_part=tap": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -90
+    },
+    "facing=west,vat_part=vat": {
+      "model": "steel_shako:block/multiblock/gruelshroom_vat",
+      "y": -90
+    }
+  }
+}

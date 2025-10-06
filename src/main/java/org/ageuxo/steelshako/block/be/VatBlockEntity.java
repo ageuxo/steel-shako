@@ -5,26 +5,23 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import org.ageuxo.steelshako.block.multi.MultiBlockType;
 import org.ageuxo.steelshako.block.multi.MultiblockCore;
 import org.ageuxo.steelshako.block.multi.MultiblockDelegate;
 import org.ageuxo.steelshako.block.multi.VatPart;
 import org.ageuxo.steelshako.render.model.ModelProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3i;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -73,38 +70,19 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
     }
 
     @Override
-    public void initCore() {
-
-    }
-
-    protected void initialiseDelegates() {
-        if (this.level instanceof ServerLevel serverLevel) {
-            Vector3i size = MultiBlockType.GRUEL_VAT.size();
-            Direction facing = this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-            Iterable<BlockPos> positions;
-            if (facing == Direction.SOUTH) {
-                positions = BlockPos.betweenClosed(this.getBlockPos(), this.getBlockPos().offset(size.x, size.y, size.z));
-            } else if (facing == Direction.NORTH) {
-                positions = BlockPos.betweenClosed(this.getBlockPos(), this.getBlockPos().offset(-size.x, size.y, -size.z));
-            } else if (facing == Direction.EAST) {
-                positions = BlockPos.betweenClosed(this.getBlockPos(), this.getBlockPos().offset(size.x, size.y, -size.z));
-            } else if (facing == Direction.WEST) {
-                positions = BlockPos.betweenClosed(this.getBlockPos(), this.getBlockPos().offset(-size.x, size.y, size.z));
-            } else {
-                throw new IllegalStateException("Facing has to be horizontal");
-            }
-            for (BlockPos pos : positions) {
-                if (serverLevel.getBlockEntity(pos) instanceof MultiblockDelegate delegate) {
-                    delegate.initDelegate(this.getBlockPos());
-                }
+    public void initCore(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        for (BlockPos pos : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
+            if (level != null && level.getBlockEntity(pos) instanceof MultiblockDelegate delegate) {
+                delegate.initDelegate(getBlockPos());
             }
         }
+
     }
 
     @Override
     public @NotNull ModelData getModelData() {
         return ModelData.builder()
-                .with(ModelProperties.OFFSET_PROP, new Vec3i(1, 0, 1))
+                .with(ModelProperties.OFFSET_PROP, new Vec3i(0, 0, 0))
                 .build();
     }
 
@@ -118,15 +96,20 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        this.waterTank.writeToNBT(registries, tag);
-
+        if (!this.waterTank.isEmpty()){
+            tag.put("water", this.waterTank.getFluid().save(registries));
+        }
+        if (!this.slopTank.isEmpty()){
+            tag.put("slop", this.slopTank.getFluid().save(registries));
+        }
         tag.put("fuel", this.fuelStorage.serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.waterTank.readFromNBT(registries, tag);
+        this.waterTank.setFluid(FluidStack.parseOptional(registries, tag.getCompound("water")));
+        this.slopTank.setFluid(FluidStack.parseOptional(registries, tag.getCompound("slop")));
         this.fuelStorage.deserializeNBT(registries, tag.getCompound("fuel"));
     }
 

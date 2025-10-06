@@ -6,7 +6,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -31,34 +30,8 @@ public class TemplateUtils {
             boolean placed = template.placeInWorld(level, centeredPos, centeredPos, settings, level.random, Block.UPDATE_ALL);
             if (placed) {
                 for (BlockPos placePos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
-                    if (level.getBlockEntity(placePos) instanceof MultiblockDelegate delegate) {
-                        BlockPos extraCenteredPos = centeredPos.offset(-1, 0, -1);
-                        delegate.initDelegate(extraCenteredPos);
-                    }
-                }
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static boolean placeMultiblockAlt(ServerLevel level, BlockPos pos, Direction direction, MultiBlockType type) {
-        StructureTemplateManager manager = level.getStructureManager();
-        StructureTemplate template = manager.get(type.location()).orElseThrow();
-        StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(getRotationFromDirection(direction));
-        Vec3i size = template.getSize(settings.getRotation());
-        BlockPos zeroPositionWithTransform = template.getZeroPositionWithTransform(pos, settings.getMirror(), settings.getRotation());
-        Vec3i offset = new Vec3i(-(size.getX() / 2), 0, -(size.getZ() / 2));
-        BlockPos centeredPos = zeroPositionWithTransform.offset(offset);
-        BoundingBox box = template.getBoundingBox(settings, centeredPos);
-
-        if (structureFits(level, box)){
-            boolean placed = template.placeInWorld(level, centeredPos, centeredPos, settings, level.random, Block.UPDATE_ALL);
-            if (placed) {
-                for (BlockPos placePos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
-                    if (level.getBlockEntity(placePos) instanceof MultiblockDelegate delegate) {
-                        delegate.initDelegate(centeredPos);
+                    if (level.getBlockEntity(placePos) instanceof MultiblockCore core) {
+                        core.initCore(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ());
                     }
                 }
                 return true;

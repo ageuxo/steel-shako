@@ -5,6 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -21,8 +24,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class VatPlaceholderBlockEntity extends BlockEntity implements MultiblockDelegate {
 
+    private final Vector3i modelPos = new Vector3i();
     private final Vector3i coreOffset = new Vector3i();
-    private String model = "";
 
     public VatPlaceholderBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.VAT_PLACEHOLDER.get(), pos, blockState);
@@ -50,7 +53,7 @@ public class VatPlaceholderBlockEntity extends BlockEntity implements Multiblock
     @Override
     public @NotNull ModelData getModelData() {
         return ModelData.builder()
-                .with(ModelProperties.OFFSET_PROP, new Vec3i(coreOffset.x, coreOffset.y, coreOffset.z))
+                .with(ModelProperties.OFFSET_PROP, new Vec3i(modelPos.x, modelPos.y, modelPos.z))
                 .build();
     }
 
@@ -61,18 +64,26 @@ public class VatPlaceholderBlockEntity extends BlockEntity implements Multiblock
         return tag;
     }
 
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.putIntArray("model_offset", new int[]{modelPos.x, modelPos.y, modelPos.z});
         tag.putIntArray("core_offset", new int[]{coreOffset.x, coreOffset.y, coreOffset.z});
-        tag.putString("model", this.model);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        coreOffset.set(tag.getIntArray("core_offset"));
-        this.model = tag.getString("model");
+        int[] modelOffset = tag.getIntArray("model_offset");
+        this.modelPos.set(modelOffset.length == 3 ? modelOffset : new int[]{0, 0, 0});
+        int[] coreOffset = tag.getIntArray("core_offset");
+        this.coreOffset.set(coreOffset.length == 3 ? coreOffset : new int[]{0, 0, 0});
         requestModelDataUpdate();
     }
 
@@ -80,6 +91,5 @@ public class VatPlaceholderBlockEntity extends BlockEntity implements Multiblock
     public void initDelegate(BlockPos corePos) {
         BlockPos pos = this.getBlockPos();
         this.coreOffset.set(pos.getX() - corePos.getX(), pos.getY() - corePos.getY(), pos.getZ() - corePos.getZ());
-        requestModelDataUpdate();
     }
 }
