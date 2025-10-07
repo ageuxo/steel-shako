@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -24,18 +25,26 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 public class VatBlockEntity extends BlockEntity implements MultiblockCore {
 
-    private final FluidTank waterTank = new FluidTank(16000, f -> f.is(FluidTags.WATER));
-    private final FluidTank slopTank = new FluidTank(16000);
+    private final FluidTank waterTank = new VatTank(16000, f -> f.is(FluidTags.WATER));
+    private final FluidTank slopTank = new VatTank(16000);
     private final ItemStackHandler fuelStorage = new ItemStackHandler(1) {
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
             return stack.getBurnTime(RecipeType.SMELTING) > 0;
         }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
     };
+
+    private AABB renderBounds;
 
     public VatBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.GRUEL_VAT.get(), pos, blockState);
@@ -47,6 +56,10 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
 
     public FluidTank waterTank() {
         return waterTank;
+    }
+
+    public FluidTank slopTank() {
+        return slopTank;
     }
 
     public @Nullable IItemHandler getItemCap(BlockState state, Direction side) {
@@ -111,6 +124,28 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
         this.waterTank.setFluid(FluidStack.parseOptional(registries, tag.getCompound("water")));
         this.slopTank.setFluid(FluidStack.parseOptional(registries, tag.getCompound("slop")));
         this.fuelStorage.deserializeNBT(registries, tag.getCompound("fuel"));
+    }
+
+    public AABB renderBounds() {
+        if (renderBounds == null) {
+            renderBounds = AABB.ofSize(this.getBlockPos().getCenter().add(0, 1, 0), 5, 4, 5);
+        }
+        return renderBounds;
+    }
+
+    public class VatTank extends FluidTank {
+        public VatTank(int capacity) {
+            super(capacity);
+        }
+
+        public VatTank(int capacity, Predicate<FluidStack> validator) {
+            super(capacity, validator);
+        }
+
+        @Override
+        protected void onContentsChanged() {
+            setChanged();
+        }
     }
 
 }

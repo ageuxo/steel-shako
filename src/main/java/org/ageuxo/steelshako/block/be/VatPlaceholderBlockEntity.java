@@ -90,6 +90,6 @@ public class VatPlaceholderBlockEntity extends BlockEntity implements Multiblock
     @Override
     public void initDelegate(BlockPos corePos) {
         BlockPos pos = this.getBlockPos();
-        this.coreOffset.set(pos.getX() - corePos.getX(), pos.getY() - corePos.getY(), pos.getZ() - corePos.getZ());
+        this.coreOffset.set(corePos.getX() - pos.getX(), corePos.getY() - pos.getY(), corePos.getZ() - pos.getZ());
     }
 }
