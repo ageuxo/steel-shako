@@ -30,8 +30,8 @@ public class TemplateUtils {
             boolean placed = template.placeInWorld(level, centeredPos, centeredPos, settings, level.random, Block.UPDATE_ALL);
             if (placed) {
                 for (BlockPos placePos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
-                    if (level.getBlockEntity(placePos) instanceof MultiblockDelegate delegate) {
-                        delegate.initDelegate(centeredPos);
+                    if (level.getBlockEntity(placePos) instanceof MultiblockCore core) {
+                        core.initCore(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ());
                     }
                 }
                 return true;

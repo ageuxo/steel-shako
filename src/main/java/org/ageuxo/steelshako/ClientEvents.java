@@ -19,12 +19,15 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.ageuxo.steelshako.block.ModFluids;
+import org.ageuxo.steelshako.block.be.ModBlockEntities;
 import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.entity.render.RayRenderer;
 import org.ageuxo.steelshako.item.ModItems;
 import org.ageuxo.steelshako.render.ArmPoseExtension;
 import org.ageuxo.steelshako.render.ItemHandPoses;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
+import org.ageuxo.steelshako.render.ber.VatBlockEntityRenderer;
+import org.ageuxo.steelshako.render.model.MultiblockGeometryLoader;
 import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.ageuxo.steelshako.render.particle.provider.RayParticleProvider;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +39,12 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.RAY.get(), RayRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.GRUEL_VAT.get(), VatBlockEntityRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
+        event.register(MultiblockGeometryLoader.ID, MultiblockGeometryLoader.INSTANCE);
     }
 
     @SubscribeEvent
