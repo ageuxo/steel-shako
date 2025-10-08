@@ -28,8 +28,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import org.ageuxo.steelshako.block.be.ModBlockEntities;
 import org.ageuxo.steelshako.block.be.VatBlockEntity;
-import org.ageuxo.steelshako.block.be.VatPlaceholderBlockEntity;
+import org.ageuxo.steelshako.block.be.DelegatingBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +58,7 @@ public class VatBlock extends Block implements EntityBlock {
         if (part == VatPart.CORE) {
             return new VatBlockEntity(pos, state);
         } else {
-            return new VatPlaceholderBlockEntity(pos, state);
+            return ModBlockEntities.GRUEL_VAT.get().create(pos, state);
         }
     }
 
@@ -68,7 +69,7 @@ public class VatBlock extends Block implements EntityBlock {
             // TODO open furnace menu
             level.blockUpdated(pos, state.getBlock());
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof VatPlaceholderBlockEntity vatBlockEntity) {
+            if (blockEntity instanceof DelegatingBlockEntity vatBlockEntity) {
                 vatBlockEntity.requestModelDataUpdate();
             }
             return InteractionResult.SUCCESS_NO_ITEM_USED;
@@ -88,7 +89,7 @@ public class VatBlock extends Block implements EntityBlock {
         if (part == VatPart.TANK)
             if (stack.is(Items.BUCKET)) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity instanceof VatPlaceholderBlockEntity vatEntity) {
+                if (blockEntity instanceof DelegatingBlockEntity vatEntity) {
                     IFluidHandler tank = vatEntity.getFluidHandler(hitResult.getDirection());
                     if (tank != null && tank.drain(1000, IFluidHandler.FluidAction.SIMULATE).getAmount() == 1000) {
                         tank.drain(1000, IFluidHandler.FluidAction.EXECUTE);
@@ -102,7 +103,7 @@ public class VatBlock extends Block implements EntityBlock {
                 }
             } else if (stack.is(Items.WATER_BUCKET)) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity instanceof VatPlaceholderBlockEntity vatEntity) {
+                if (blockEntity instanceof DelegatingBlockEntity vatEntity) {
                     IFluidHandler tank = vatEntity.getFluidHandler(hitResult.getDirection());
                     FluidStack fluid = new FluidStack(Fluids.WATER, 1000);
                     if (tank != null && tank.fill(fluid, IFluidHandler.FluidAction.SIMULATE) == 1000) {

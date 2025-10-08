@@ -18,7 +18,6 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.ageuxo.steelshako.block.multi.MultiblockCore;
-import org.ageuxo.steelshako.block.multi.MultiblockDelegate;
 import org.ageuxo.steelshako.block.multi.VatPart;
 import org.ageuxo.steelshako.render.model.ModelProperties;
 import org.jetbrains.annotations.NotNull;
@@ -62,6 +61,7 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
         return slopTank;
     }
 
+    @Override
     public @Nullable IItemHandler getItemCap(BlockState state, Direction side) {
         VatPart part = state.getValue(VatPart.PROPERTY);
         if (part == VatPart.FURNACE) {
@@ -71,6 +71,7 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
         return null;
     }
 
+    @Override
     public @Nullable IFluidHandler getFluidCap(BlockState state, Direction side) {
         VatPart part = state.getValue(VatPart.PROPERTY);
         if (part == VatPart.TANK) {
@@ -80,16 +81,6 @@ public class VatBlockEntity extends BlockEntity implements MultiblockCore {
         }
 
         return null;
-    }
-
-    @Override
-    public void initCore(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        for (BlockPos pos : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
-            if (level != null && level.getBlockEntity(pos) instanceof MultiblockDelegate delegate) {
-                delegate.initDelegate(getBlockPos());
-            }
-        }
-
     }
 
     @Override

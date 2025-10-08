@@ -18,7 +18,7 @@ public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, SteelShakoMod.MOD_ID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VatBlockEntity>> GRUEL_VAT = register("gruel_vat", VatBlockEntity::new, ModBlocks.VAT_BLOCK);
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VatPlaceholderBlockEntity>> VAT_PLACEHOLDER = register("vat_placeholder", VatPlaceholderBlockEntity::new, ModBlocks.VAT_BLOCK);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DelegatingBlockEntity>> VAT_PLACEHOLDER = register("vat_placeholder", DelegatingBlockEntity::gruelVat, ModBlocks.VAT_BLOCK);
 
     @SafeVarargs
     private static @NotNull <T extends BlockEntity, B extends Block & EntityBlock> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> blockEntitySupplier, DeferredBlock<B>... validBlocks) {
