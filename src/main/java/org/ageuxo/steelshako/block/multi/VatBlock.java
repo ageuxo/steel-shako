@@ -58,7 +58,7 @@ public class VatBlock extends Block implements EntityBlock {
         if (part == VatPart.CORE) {
             return new VatBlockEntity(pos, state);
         } else {
-            return ModBlockEntities.GRUEL_VAT.get().create(pos, state);
+            return ModBlockEntities.VAT_PLACEHOLDER.get().create(pos, state);
         }
     }
 
