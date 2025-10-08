@@ -67,17 +67,7 @@ public class VatBlock extends Block implements EntityBlock {
         VatPart part = state.getValue(VatPart.PROPERTY);
         if (part == VatPart.FURNACE) {
             // TODO open furnace menu
-            level.blockUpdated(pos, state.getBlock());
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof DelegatingBlockEntity vatBlockEntity) {
-                vatBlockEntity.requestModelDataUpdate();
-            }
             return InteractionResult.SUCCESS_NO_ITEM_USED;
-        } else if (part == VatPart.CORE) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof VatBlockEntity vatBlockEntity) {
-                vatBlockEntity.requestModelDataUpdate();
-            }
         }
 
         return InteractionResult.PASS;
@@ -89,8 +79,8 @@ public class VatBlock extends Block implements EntityBlock {
         if (part == VatPart.TANK)
             if (stack.is(Items.BUCKET)) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity instanceof DelegatingBlockEntity vatEntity) {
-                    IFluidHandler tank = vatEntity.getFluidHandler(hitResult.getDirection());
+                if (blockEntity instanceof DelegatingBlockEntity delegate) {
+                    IFluidHandler tank = delegate.getFluidHandler(hitResult.getDirection());
                     if (tank != null && tank.drain(1000, IFluidHandler.FluidAction.SIMULATE).getAmount() == 1000) {
                         tank.drain(1000, IFluidHandler.FluidAction.EXECUTE);
                         ItemStack result = ItemUtils.createFilledResult(stack, player, new ItemStack(Items.WATER_BUCKET));
@@ -103,8 +93,8 @@ public class VatBlock extends Block implements EntityBlock {
                 }
             } else if (stack.is(Items.WATER_BUCKET)) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity instanceof DelegatingBlockEntity vatEntity) {
-                    IFluidHandler tank = vatEntity.getFluidHandler(hitResult.getDirection());
+                if (blockEntity instanceof DelegatingBlockEntity delegate) {
+                    IFluidHandler tank = delegate.getFluidHandler(hitResult.getDirection());
                     FluidStack fluid = new FluidStack(Fluids.WATER, 1000);
                     if (tank != null && tank.fill(fluid, IFluidHandler.FluidAction.SIMULATE) == 1000) {
                         tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
