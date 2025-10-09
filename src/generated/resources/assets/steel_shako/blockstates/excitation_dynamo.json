@@ -1,0 +1,79 @@
+{
+  "variants": {
+    "excitation_dynamo_part=charger,facing=east": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo"
+    },
+    "excitation_dynamo_part=charger,facing=north": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 270
+    },
+    "excitation_dynamo_part=charger,facing=south": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 90
+    },
+    "excitation_dynamo_part=charger,facing=west": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 180
+    },
+    "excitation_dynamo_part=core,facing=east": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo"
+    },
+    "excitation_dynamo_part=core,facing=north": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 270
+    },
+    "excitation_dynamo_part=core,facing=south": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 90
+    },
+    "excitation_dynamo_part=core,facing=west": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 180
+    },
+    "excitation_dynamo_part=furnace,facing=east": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo"
+    },
+    "excitation_dynamo_part=furnace,facing=north": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 270
+    },
+    "excitation_dynamo_part=furnace,facing=south": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 90
+    },
+    "excitation_dynamo_part=furnace,facing=west": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 180
+    },
+    "excitation_dynamo_part=placeholder,facing=east": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo"
+    },
+    "excitation_dynamo_part=placeholder,facing=north": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 270
+    },
+    "excitation_dynamo_part=placeholder,facing=south": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 90
+    },
+    "excitation_dynamo_part=placeholder,facing=west": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 180
+    },
+    "excitation_dynamo_part=tank,facing=east": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo"
+    },
+    "excitation_dynamo_part=tank,facing=north": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 270
+    },
+    "excitation_dynamo_part=tank,facing=south": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 90
+    },
+    "excitation_dynamo_part=tank,facing=west": {
+      "model": "steel_shako:block/multiblock/excitation_dynamo",
+      "y": 180
+    }
+  }
+}

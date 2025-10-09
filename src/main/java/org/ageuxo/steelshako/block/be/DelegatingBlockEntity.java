@@ -37,6 +37,10 @@ public class DelegatingBlockEntity extends BlockEntity implements MultiblockDele
         return new DelegatingBlockEntity(ModBlockEntities.VAT_PLACEHOLDER.get(), pos, state);
     }
 
+    public static DelegatingBlockEntity excitationDynamo(BlockPos pos, BlockState state) {
+        return new DelegatingBlockEntity(ModBlockEntities.EXCITATION_PLACEHOLDER.get(), pos, state);
+    }
+
     @Nullable
     public IItemHandler getItemHandler(Direction side) {
         //noinspection DataFlowIssue

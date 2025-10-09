@@ -20,6 +20,9 @@ public class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VatBlockEntity>> GRUEL_VAT = register("gruel_vat", VatBlockEntity::new, ModBlocks.VAT_BLOCK);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DelegatingBlockEntity>> VAT_PLACEHOLDER = register("vat_placeholder", DelegatingBlockEntity::gruelVat, ModBlocks.VAT_BLOCK);
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExcitationDynamoBlockEntity>> EXCITATION_DYNAMO = register("excitation_dynamo", ExcitationDynamoBlockEntity::new, ModBlocks.EXCITATION_DYNAMO_BLOCK);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DelegatingBlockEntity>> EXCITATION_PLACEHOLDER = register("excitation_placeholder", DelegatingBlockEntity::excitationDynamo, ModBlocks.EXCITATION_DYNAMO_BLOCK);
+
     @SafeVarargs
     private static @NotNull <T extends BlockEntity, B extends Block & EntityBlock> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(String name, BlockEntityType.BlockEntitySupplier<T> blockEntitySupplier, DeferredBlock<B>... validBlocks) {
         //noinspection DataFlowIssue
