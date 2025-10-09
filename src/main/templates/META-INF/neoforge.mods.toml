@@ -89,6 +89,13 @@ config="${mod_id}.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
+    modId="geckolib"
+    type="required"
+    versionRange="[4.8,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
     modId="smartbrainlib"
     type="required"
     versionRange="[1.16,)"
