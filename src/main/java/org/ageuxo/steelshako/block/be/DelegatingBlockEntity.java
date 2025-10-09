@@ -9,10 +9,12 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.ageuxo.steelshako.block.multi.MultiblockCore;
 import org.ageuxo.steelshako.block.multi.MultiblockDelegate;
 import org.ageuxo.steelshako.render.model.ModelProperties;
 import org.jetbrains.annotations.NotNull;
@@ -22,21 +24,29 @@ import org.joml.Vector3i;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class VatPlaceholderBlockEntity extends BlockEntity implements MultiblockDelegate {
+public class DelegatingBlockEntity extends BlockEntity implements MultiblockDelegate {
 
     private final Vector3i modelPos = new Vector3i();
     private final Vector3i coreOffset = new Vector3i();
 
-    public VatPlaceholderBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntities.VAT_PLACEHOLDER.get(), pos, blockState);
+    private DelegatingBlockEntity(BlockEntityType<DelegatingBlockEntity> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+    }
+
+    public static DelegatingBlockEntity gruelVat(BlockPos pos, BlockState state) {
+        return new DelegatingBlockEntity(ModBlockEntities.VAT_PLACEHOLDER.get(), pos, state);
+    }
+
+    public static DelegatingBlockEntity excitationDynamo(BlockPos pos, BlockState state) {
+        return new DelegatingBlockEntity(ModBlockEntities.EXCITATION_PLACEHOLDER.get(), pos, state);
     }
 
     @Nullable
     public IItemHandler getItemHandler(Direction side) {
         //noinspection DataFlowIssue
         BlockEntity blockEntity = this.level.getBlockEntity(this.getBlockPos().offset(this.coreOffset.x, this.coreOffset.y, this.coreOffset.z));
-        if (blockEntity instanceof VatBlockEntity vat) {
-            return vat.getItemCap(this.getBlockState(), side);
+        if (blockEntity instanceof MultiblockCore core) {
+            return core.getItemCap(this.getBlockState(), side);
         }
         return null;
     }
@@ -44,8 +54,8 @@ public class VatPlaceholderBlockEntity extends BlockEntity implements Multiblock
     public @Nullable IFluidHandler getFluidHandler(Direction side) {
         //noinspection DataFlowIssue
         BlockEntity blockEntity = this.level.getBlockEntity(this.getBlockPos().offset(this.coreOffset.x, this.coreOffset.y, this.coreOffset.z));
-        if (blockEntity instanceof VatBlockEntity vat) {
-            return vat.getFluidCap(this.getBlockState(), side);
+        if (blockEntity instanceof MultiblockCore core) {
+            return core.getFluidCap(this.getBlockState(), side);
         }
         return null;
     }

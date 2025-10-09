@@ -28,18 +28,17 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import org.ageuxo.steelshako.block.be.ModBlockEntities;
-import org.ageuxo.steelshako.block.be.VatBlockEntity;
 import org.ageuxo.steelshako.block.be.DelegatingBlockEntity;
+import org.ageuxo.steelshako.block.be.ModBlockEntities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class VatBlock extends Block implements EntityBlock {
+public class ExcitationDynamoBlock extends Block implements EntityBlock {
 
-    public VatBlock(Properties properties) {
+    public ExcitationDynamoBlock(Properties properties) {
         super(properties.noOcclusion()
                 .isViewBlocking((state, level, pos) -> false)
                 .isSuffocating((state, level, pos) -> false)
@@ -48,24 +47,24 @@ public class VatBlock extends Block implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(VatPart.PROPERTY).add(BlockStateProperties.HORIZONTAL_FACING);
+        builder.add(ExcitationDynamoPart.PROPERTY).add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        VatPart part = state.getValue(VatPart.PROPERTY);
-        if (part == VatPart.CORE) {
-            return new VatBlockEntity(pos, state);
+        ExcitationDynamoPart part = state.getValue(ExcitationDynamoPart.PROPERTY);
+        if (part == ExcitationDynamoPart.CORE){
+            return ModBlockEntities.EXCITATION_DYNAMO.get().create(pos, state);
         } else {
-            return ModBlockEntities.VAT_PLACEHOLDER.get().create(pos, state);
+            return ModBlockEntities.EXCITATION_PLACEHOLDER.get().create(pos, state);
         }
     }
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        VatPart part = state.getValue(VatPart.PROPERTY);
-        if (part == VatPart.FURNACE) {
+        ExcitationDynamoPart part = state.getValue(ExcitationDynamoPart.PROPERTY);
+        if (part == ExcitationDynamoPart.FURNACE) {
             // TODO open furnace menu
             return InteractionResult.SUCCESS_NO_ITEM_USED;
         }
@@ -75,8 +74,8 @@ public class VatBlock extends Block implements EntityBlock {
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        VatPart part = state.getValue(VatPart.PROPERTY);
-        if (part == VatPart.TANK)
+        var part = state.getValue(ExcitationDynamoPart.PROPERTY);
+        if (part == ExcitationDynamoPart.TANK) {
             if (stack.is(Items.BUCKET)) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
                 if (blockEntity instanceof DelegatingBlockEntity delegate) {
@@ -107,6 +106,7 @@ public class VatBlock extends Block implements EntityBlock {
                     }
                 }
             }
+        }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
@@ -131,6 +131,5 @@ public class VatBlock extends Block implements EntityBlock {
     protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
         return 1.0F;
     }
-
 
 }

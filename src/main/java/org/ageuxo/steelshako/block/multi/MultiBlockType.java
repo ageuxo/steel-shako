@@ -9,7 +9,8 @@ import org.joml.Vector3i;
 import java.util.Locale;
 
 public enum MultiBlockType implements StringRepresentable {
-    GRUEL_VAT("multiblock/gruel_vat", 4, 3, 4);
+    GRUEL_VAT("multiblock/gruel_vat", 4, 3, 4),
+    EXCITATION_DYNAMO("multiblock/excitation_dynamo", 3, 3, 3);
 
     private final ResourceLocation location;
     private final Vector3i size;

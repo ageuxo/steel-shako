@@ -29,6 +29,7 @@ public class DeployerItem extends Item {
     public InteractionResult place(BlockPlaceContext context) {
         if (context.getLevel() instanceof ServerLevel serverLevel &&
                 TemplateUtils.placeMultiblock(serverLevel, context.getClickedPos(), context.getHorizontalDirection(), multiBlock)) {
+            context.getItemInHand().shrink(1);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
