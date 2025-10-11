@@ -16,6 +16,11 @@ public class ModPayloads {
                 ClientPayloadHandler::handleBlockHeatUpdatePayload
         );
 
+        registrar.playToClient(
+                RayBeamPayload.TYPE,
+                RayBeamPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleRayBeamPayload
+        );
 
     }
 

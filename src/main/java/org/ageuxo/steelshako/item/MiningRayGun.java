@@ -30,6 +30,7 @@ import org.ageuxo.steelshako.item.component.ChargeComponent;
 import org.ageuxo.steelshako.item.component.ModComponents;
 import org.ageuxo.steelshako.render.geo.MiningRayGunRenderer;
 import org.ageuxo.steelshako.render.particle.ModParticles;
+import org.ageuxo.steelshako.render.particle.VectorOption;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -141,7 +142,9 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
             LOGGER.debug("Adding progress to {}, heat: {}", hitPos, rayCache.blockHeat(hitPos));
             chunk.setData(ModAttachments.MINING_RAY_CACHE, rayCache);
         }
-        level.addParticle(ModParticles.MINING_RAY_BEAM.get(), eyePos.x, eyePos.y, eyePos.z, rayEnd.x, rayEnd.y, rayEnd.z);
+        if (level.isClientSide){
+            level.addParticle(new VectorOption(ModParticles.RAY_BEAM.get(), rayEnd.toVector3f()), eyePos.x, eyePos.y, eyePos.z, rayEnd.x, rayEnd.y, rayEnd.z);
+        }
     }
 
     protected boolean canHitEntity(LivingEntity shooter, Entity target) {

@@ -91,7 +91,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(ModParticles.MINING_RAY_BEAM.get(), RayParticleProvider::new);
+        event.registerSpriteSet(ModParticles.RAY_BEAM.get(), RayParticleProvider::new);
     }
 
 }
