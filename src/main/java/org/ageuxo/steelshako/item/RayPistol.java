@@ -72,9 +72,7 @@ public class RayPistol extends ProjectileWeaponItem implements RangedTargetWeapo
         }
 
         // Trace for Entities
-        double min = 0.3;
-        double max = 0.13;
-        EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(shooter, eyePos, rayEnd, new AABB(min, min, min, max, max, max), (Entity entity) -> canHitEntity(shooter, entity), getDefaultProjectileRange());
+        EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(shooter, eyePos, rayEnd, new AABB(eyePos.subtract(0.3, 0.3, 0.3), rayEnd.add(0.3, 0.3, 0.3)), (Entity entity) -> canHitEntity(shooter, entity), getDefaultProjectileRange());
 
         if (entityHitResult != null && entityHitResult.getType() == HitResult.Type.ENTITY) { // If hit entity, do damage
             rayEnd = entityHitResult.getLocation();
