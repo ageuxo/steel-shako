@@ -11,7 +11,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.ageuxo.steelshako.attachment.MiningRayCache;
 import org.ageuxo.steelshako.attachment.ModAttachments;
-import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.ageuxo.steelshako.render.particle.VectorOption;
 import org.joml.Vector3f;
 
@@ -28,12 +27,12 @@ public class ClientPayloadHandler {
     }
 
     public static void handleRayBeamPayload(RayBeamPayload payload, IPayloadContext ctx) {
-        if (!addRayParticle(payload.shooterId(), payload.to())) {
+        if (!addRayParticle(payload.shooterId(), payload.to(), payload.colour())) {
             LogUtils.getLogger().error("Received RayBeamPayload for id of non-existent entity! These should only ever be sent for tracked entities!");
         }
     }
 
-    public static boolean addRayParticle(int shooterId, Vector3f to) {
+    public static boolean addRayParticle(int shooterId, Vector3f to, RayBeamPayload.Colour colour) {
         ClientLevel level = Minecraft.getInstance().level;
         //noinspection DataFlowIssue
         Entity shooter = level.getEntity(shooterId);
@@ -43,7 +42,7 @@ public class ClientPayloadHandler {
                             .yRot(-25f * Mth.DEG_TO_RAD)
             ).add(0, -0.4, 0);
 
-            level.addParticle(new VectorOption(ModParticles.RAY_BEAM.get(), to), from.x, from.y, from.z, 0, 0, 0);
+            level.addParticle(new VectorOption(colour.get(), to), from.x, from.y, from.z, 0, 0, 0);
             return true;
         }
         return false;

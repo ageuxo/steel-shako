@@ -13,6 +13,11 @@ public class ModEntityTypes {
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, SteelShakoMod.MOD_ID);
 
+    public static final DeferredHolder<EntityType<?>, EntityType<Automaton>> AUTOMATON = register("automaton", EntityType.Builder.of(Automaton::new, MobCategory.MONSTER)
+            .sized(1, 3)
+            .eyeHeight(2f)
+    );
+
     public static final DeferredHolder<EntityType<?>, EntityType<Ray>> RAY = register("ray", EntityType.Builder.of(Ray::create, MobCategory.MISC)
             .sized(0.4F, 0.4F)
             .eyeHeight(0.13F)

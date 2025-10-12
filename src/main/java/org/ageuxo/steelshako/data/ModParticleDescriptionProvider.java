@@ -15,7 +15,8 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
 
     @Override
     protected void addDescriptions() {
-        sprite(ModParticles.RAY_BEAM.get(), SteelShakoMod.modRL("ray_beam"));
+        sprite(ModParticles.RED_RAY_BEAM.get(), SteelShakoMod.modRL("ray_red"));
+        sprite(ModParticles.ORANGE_RAY_BEAM.get(), SteelShakoMod.modRL("ray_orange"));
 
 
     }

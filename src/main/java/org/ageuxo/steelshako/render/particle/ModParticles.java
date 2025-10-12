@@ -17,7 +17,8 @@ public class ModParticles {
 
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, SteelShakoMod.MOD_ID);
 
-    public static final DeferredHolder<ParticleType<?>, ParticleType<VectorOption>> RAY_BEAM = register("ray_beam", false, VectorOption::codec, VectorOption::streamCodec);
+    public static final DeferredHolder<ParticleType<?>, ParticleType<VectorOption>> RED_RAY_BEAM = register("red_ray_beam", false, VectorOption::codec, VectorOption::streamCodec);
+    public static final DeferredHolder<ParticleType<?>, ParticleType<VectorOption>> ORANGE_RAY_BEAM = register("orange_ray_beam", false, VectorOption::codec, VectorOption::streamCodec);
 
 
 

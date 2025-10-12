@@ -37,6 +37,7 @@ public class RayParticle extends TextureSheetParticle {
 
         this.setSpriteFromAge(spriteSet);
         this.to = new Vec3(toX, toY, toZ);
+        this.setBoundingBox(new AABB(fromX, fromY, fromZ, toX, toY, toZ).inflate(0.4));
     }
 
     @Override
@@ -92,17 +93,19 @@ public class RayParticle extends TextureSheetParticle {
                 packedLight);
 
         // Top (+Y)
-        addQuad(buffer, transform, -1, 1, 1,
+        addQuad(buffer, transform,
                 1, 1, 1,
                 1, 1, -1,
                 -1, 1, -1,
+                -1, 1, 1,
                 packedLight);
 
         // Bottom (-Y)
-        addQuad(buffer, transform, -1, -1, -1,
-                1, -1, -1,
+        addQuad(buffer, transform,
                 1, -1, 1,
+                1, -1, -1,
                 -1, -1, 1,
+                -1, -1, -1,
                 packedLight);
     }
 
@@ -151,7 +154,7 @@ public class RayParticle extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull AABB getBoundingBox() {
-        return super.getBoundingBox();
+    public @NotNull AABB getRenderBoundingBox(float partialTicks) {
+        return getBoundingBox();
     }
 }
