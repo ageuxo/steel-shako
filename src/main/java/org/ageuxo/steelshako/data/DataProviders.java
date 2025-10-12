@@ -6,12 +6,15 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.ageuxo.steelshako.ModDamageTypes;
 import org.ageuxo.steelshako.SteelShakoMod;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -41,7 +44,16 @@ public class DataProviders {
 
         generator.addProvider(
                 event.includeServer(), new ModParticleDescriptionProvider(output, fileHelper)
-                );
+        );
+
+        generator.addProvider(
+                event.includeServer(), (DataProvider.Factory<LootTableProvider>) (provider) -> new LootTableProvider(output, Set.of(),
+                        List.of(
+                                new LootTableProvider.SubProviderEntry(ModEntityLootSubProvider::new, LootContextParamSets.ENTITY)
+                        ),
+                        lookupProvider
+                )
+        );
 
         // DataPack object provider
         generator.addProvider(

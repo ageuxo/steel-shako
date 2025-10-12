@@ -20,5 +20,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                 .texture("layer1", modLoc("item/gruel_bucket_mask"))
                 .texture("layer0", mcLoc("item/bucket"));
 
+        basicItem(ModItems.VACUUM_TUBE.get());
+
     }
 }

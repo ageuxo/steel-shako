@@ -17,5 +17,6 @@ public class ModItems {
     public static final DeferredItem<DeployerItem> VAT_DEPLOYER = ITEMS.registerItem("vat_deployer", (p) -> new DeployerItem(p, MultiBlockType.GRUEL_VAT));
     public static final DeferredItem<DeployerItem> EXCITATION_DYNAMO_DEPLOYER = ITEMS.registerItem("excitation_dynamo_deployer", (p) -> new DeployerItem(p, MultiBlockType.EXCITATION_DYNAMO));
     public static final DeferredItem<BucketItem> GRUEL_BUCKET = ITEMS.registerItem("gruel_bucket", (p)-> new BucketItem(ModFluids.GRUEL.get(), p));
+    public static final DeferredItem<Item> VACUUM_TUBE = ITEMS.registerItem("vacuum_tube", Item::new);
 
 }
