@@ -33,7 +33,7 @@ public class RayParticle extends TextureSheetParticle {
         this.spriteSet = spriteSet;
         this.gravity = 0;
         this.hasPhysics = false;
-        this.lifetime = 200;
+        this.lifetime = 100;
 
         this.setSpriteFromAge(spriteSet);
         this.to = new Vec3(toX, toY, toZ);
