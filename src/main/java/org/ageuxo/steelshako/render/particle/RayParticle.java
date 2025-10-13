@@ -6,6 +6,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -20,6 +22,7 @@ public class RayParticle extends TextureSheetParticle {
     protected final double toX;
     protected final double toY;
     protected final double toZ;
+    protected Vec3 to;
     protected final SpriteSet spriteSet;
 
     public RayParticle(ClientLevel level, double fromX, double fromY, double fromZ, double toX, double toY, double toZ, SpriteSet spriteSet) {
@@ -30,9 +33,11 @@ public class RayParticle extends TextureSheetParticle {
         this.spriteSet = spriteSet;
         this.gravity = 0;
         this.hasPhysics = false;
-        this.lifetime = 3;
+        this.lifetime = 100;
 
         this.setSpriteFromAge(spriteSet);
+        this.to = new Vec3(toX, toY, toZ);
+        this.setBoundingBox(new AABB(fromX, fromY, fromZ, toX, toY, toZ).inflate(0.4));
     }
 
     @Override
@@ -88,17 +93,19 @@ public class RayParticle extends TextureSheetParticle {
                 packedLight);
 
         // Top (+Y)
-        addQuad(buffer, transform, -1, 1, 1,
+        addQuad(buffer, transform,
                 1, 1, 1,
                 1, 1, -1,
                 -1, 1, -1,
+                -1, 1, 1,
                 packedLight);
 
         // Bottom (-Y)
-        addQuad(buffer, transform, -1, -1, -1,
-                1, -1, -1,
+        addQuad(buffer, transform,
                 1, -1, 1,
+                1, -1, -1,
                 -1, -1, 1,
+                -1, -1, -1,
                 packedLight);
     }
 
@@ -133,12 +140,21 @@ public class RayParticle extends TextureSheetParticle {
         Vector4f pos = new Vector4f(x, y, z, 1f).mul(transform);
         buffer.addVertex(pos.x(), pos.y(), pos.z())
                 .setUv(u, v)
-                .setColor(this.rCol, this.gCol, this.bCol, this.alpha)
+                .setColor(this.rCol, this.gCol, this.bCol, this.alpha * (1 - easeOutExpo((float) this.age / this.lifetime)))
                 .setLight(packedLight);
+    }
+
+    public static float easeOutExpo(float x) {
+        return x == 1 ? 1 : (float) (1 - Math.pow(2, -10 * x));
     }
 
     @Override
     public void tick() {
         super.tick();
+    }
+
+    @Override
+    public @NotNull AABB getRenderBoundingBox(float partialTicks) {
+        return getBoundingBox();
     }
 }

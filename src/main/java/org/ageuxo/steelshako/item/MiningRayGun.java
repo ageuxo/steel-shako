@@ -22,14 +22,17 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.*;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.ageuxo.steelshako.ModDamageTypes;
 import org.ageuxo.steelshako.attachment.MiningRayCache;
 import org.ageuxo.steelshako.attachment.ModAttachments;
 import org.ageuxo.steelshako.charge.ChargeHolder;
 import org.ageuxo.steelshako.item.component.ChargeComponent;
 import org.ageuxo.steelshako.item.component.ModComponents;
+import org.ageuxo.steelshako.network.RayBeamPayload;
 import org.ageuxo.steelshako.render.geo.MiningRayGunRenderer;
 import org.ageuxo.steelshako.render.particle.ModParticles;
+import org.ageuxo.steelshako.render.particle.VectorOption;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -141,7 +144,11 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
             LOGGER.debug("Adding progress to {}, heat: {}", hitPos, rayCache.blockHeat(hitPos));
             chunk.setData(ModAttachments.MINING_RAY_CACHE, rayCache);
         }
-        level.addParticle(ModParticles.MINING_RAY_BEAM.get(), eyePos.x, eyePos.y, eyePos.z, rayEnd.x, rayEnd.y, rayEnd.z);
+        if (level.isClientSide){
+            level.addParticle(new VectorOption(ModParticles.RED_RAY_BEAM.get(), rayEnd.toVector3f()), eyePos.x, eyePos.y, eyePos.z, rayEnd.x, rayEnd.y, rayEnd.z);
+        } else {
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(shooter, new RayBeamPayload(shooter.getId(), rayEnd.toVector3f(), RayBeamPayload.Colour.RED));
+        }
     }
 
     protected boolean canHitEntity(LivingEntity shooter, Entity target) {

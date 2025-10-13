@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        -2,
+        10
+      ],
+      "rotation": [
+        20,
+        180,
+        180
+      ]
+    }
+  }
+}

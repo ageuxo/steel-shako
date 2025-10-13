@@ -27,6 +27,7 @@ import org.ageuxo.steelshako.render.ArmPoseExtension;
 import org.ageuxo.steelshako.render.ItemHandPoses;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
 import org.ageuxo.steelshako.render.ber.VatBlockEntityRenderer;
+import org.ageuxo.steelshako.render.geo.AutomatonRenderer;
 import org.ageuxo.steelshako.render.model.MultiblockGeometryLoader;
 import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.ageuxo.steelshako.render.particle.provider.RayParticleProvider;
@@ -39,6 +40,8 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.RAY.get(), RayRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.AUTOMATON.get(), AutomatonRenderer::new);
+
         event.registerBlockEntityRenderer(ModBlockEntities.GRUEL_VAT.get(), VatBlockEntityRenderer::new);
     }
 
@@ -74,7 +77,7 @@ public class ClientEvents {
                 ItemHandPoses.applyItemArmTransform(poseStack, arm, equipProcess);
                 return true;
             }
-        }, ModItems.RAY_GUN.get());
+        }, ModItems.MINING_RAY_GUN.get());
 
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
@@ -91,7 +94,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(ModParticles.MINING_RAY_BEAM.get(), RayParticleProvider::new);
+        event.registerSpriteSet(ModParticles.RED_RAY_BEAM.get(), RayParticleProvider::new);
+        event.registerSpriteSet(ModParticles.ORANGE_RAY_BEAM.get(), RayParticleProvider::new);
     }
 
 }
