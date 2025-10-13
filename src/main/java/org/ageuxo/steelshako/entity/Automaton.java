@@ -35,6 +35,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliat
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
+import org.ageuxo.steelshako.ModTags;
 import org.ageuxo.steelshako.entity.behaviour.StopAndFireAtTargetPos;
 import org.ageuxo.steelshako.item.ModItems;
 import org.ageuxo.steelshako.item.RangedTargetWeapon;
@@ -80,7 +81,7 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 25)
-                .add(Attributes.FOLLOW_RANGE, 6)
+                .add(Attributes.FOLLOW_RANGE, 16)
                 .add(Attributes.MOVEMENT_SPEED, 0.18D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
@@ -185,7 +186,8 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
     public BrainActivityGroup<? extends Automaton> getIdleTasks() {
         return BrainActivityGroup.idleTasks(
                 new FirstApplicableBehaviour<>(
-                        new TargetOrRetaliate<>(),
+                        new TargetOrRetaliate<>()
+                                .attackablePredicate(Automaton::isHostileTo),
                         new SetPlayerLookTarget<>(),
                         new SetRandomLookTarget<>().lookTime(e-> e.getRandom().nextInt(20, 80))
                 ),
@@ -206,6 +208,10 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
                         .whenStarting(this::chargeAttack)
                         .cooldownFor(e -> 80)
         );
+    }
+
+    public static boolean isHostileTo(LivingEntity target) {
+        return target.getType().is(ModTags.AUTOMATON_MOB_TARGETS);
     }
 
     protected <E extends LivingEntity> void fireAttack(E e) {

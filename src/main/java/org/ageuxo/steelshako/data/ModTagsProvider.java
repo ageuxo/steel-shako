@@ -2,7 +2,10 @@ package org.ageuxo.steelshako.data;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -37,5 +40,22 @@ public class ModTagsProvider {
             this.tag(ModTags.LASER_AMMO)
                     .add(Items.REDSTONE);
         }
+    }
+
+    public static class Entity extends EntityTypeTagsProvider {
+
+        public Entity(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, provider, modId, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider provider) {
+            this.tag(ModTags.AUTOMATON_MOB_TARGETS)
+                    .add(EntityType.PLAYER)
+                    .add(EntityType.VILLAGER)
+                    .add(EntityType.IRON_GOLEM)
+                    .addTag(EntityTypeTags.ILLAGER);
+        }
+
     }
 }

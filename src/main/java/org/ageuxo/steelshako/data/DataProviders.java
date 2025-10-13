@@ -35,6 +35,10 @@ public class DataProviders {
         );
 
         generator.addProvider(
+                event.includeServer(), new ModTagsProvider.Entity(output, lookupProvider, SteelShakoMod.MOD_ID, fileHelper)
+        );
+
+        generator.addProvider(
                 event.includeServer(), new ModBlockStateProvider(output, fileHelper)
         );
 
