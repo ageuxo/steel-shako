@@ -41,7 +41,7 @@
 			}
 		},
 		"head_look": {
-			"loop": true,
+			"loop": false,
 			"animation_length": 1.1667,
 			"bones": {
 				"head2": {

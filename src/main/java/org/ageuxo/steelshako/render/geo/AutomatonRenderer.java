@@ -1,7 +1,5 @@
 package org.ageuxo.steelshako.render.geo;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -20,8 +18,6 @@ public class AutomatonRenderer extends GeoEntityRenderer<Automaton> {
         addRenderLayer(
                 new HandLayer<>(this, "right_arm3", "left_arm"));
     }
-
-
 
     public static class HandLayer<E extends LivingEntity & GeoAnimatable> extends BlockAndItemGeoLayer<E> {
 
@@ -55,18 +51,6 @@ public class AutomatonRenderer extends GeoEntityRenderer<Automaton> {
             return ItemDisplayContext.NONE;
         }
 
-        @Override
-        protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, E animatable, MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
-            /*if (bone.getName().equals(rightHand)) {
-                poseStack.pushPose();
-                bone.
-
-
-            }*/
-
-
-            super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
-        }
     }
 
 }

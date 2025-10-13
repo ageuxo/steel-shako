@@ -42,10 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -54,7 +51,7 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class Automaton extends Monster implements SmartBrainOwner<Automaton>, GeoEntity, RangedPosAttacker {
 
-    protected static final RawAnimation HEAD_LOOK_ANIM = RawAnimation.begin().thenLoop("head_look");
+    protected static final RawAnimation HEAD_LOOK_ANIM = RawAnimation.begin().then("head_look", Animation.LoopType.PLAY_ONCE);
     protected static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
     protected static final RawAnimation AIM_ANIM = RawAnimation.begin().thenPlay("ready").thenLoop("aim");
     protected static final RawAnimation VIBRATION_ANIM = RawAnimation.begin().thenLoop("vibrations");
@@ -65,6 +62,10 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
     protected static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(Automaton.class, EntityDataSerializers.INT);
 
     private final AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
+
+    private int idleCooldown = 0;
+    private int idleTimer = 0;
+    private boolean shouldStartHeadLook = false;
 
     public Automaton(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -111,6 +112,15 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (level().isClientSide && ++idleTimer > idleCooldown) {
+            idleCooldown = random.nextInt(100, 200);
+            shouldStartHeadLook = true;
+        }
+    }
+
+    @Override
     protected void customServerAiStep() {
         tickBrain(this);
     }
@@ -125,19 +135,37 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "walk", state -> {
+        AnimationController<Automaton> walk = new AnimationController<>(this, "walk", state -> {
             if (state.isMoving()) {
                 return state.setAndContinue(WALK_ANIM);
             }
+            return state.setAndContinue(IDLE_ANIM);
+        });
+        controllers.add(walk);
+
+        AnimationController<Automaton> vibration = new AnimationController<>(this, "vibration", state -> state.setAndContinue(VIBRATION_ANIM));
+        controllers.add(vibration);
+
+        AnimationController<Automaton> weapon = new AnimationController<>(this, "weapon", state -> PlayState.CONTINUE)
+                .triggerableAnim("aim", AIM_ANIM)
+                .triggerableAnim("fire", FIRE_ANIM);
+        controllers.add(weapon);
+
+        AnimationController<Automaton> headLook = new AnimationController<>(this, "head_look", state -> {
+            if (walk.getCurrentRawAnimation().equals(IDLE_ANIM) && !weapon.isPlayingTriggeredAnimation()) {
+                if (shouldStartHeadLook) {
+                    shouldStartHeadLook = false;
+                    idleTimer = 0;
+                    state.resetCurrentAnimation();
+                    return state.setAndContinue(HEAD_LOOK_ANIM);
+                } else {
+                    return PlayState.CONTINUE;
+                }
+
+            }
             return PlayState.STOP;
-        }));
-                controllers.add(new AnimationController<>(this, "vibration", state -> state.setAndContinue(VIBRATION_ANIM)));
-                controllers.add(
-                        new AnimationController<>(this, "weapon", state -> PlayState.CONTINUE)
-                                .triggerableAnim("aim", AIM_ANIM)
-                                .triggerableAnim("fire", FIRE_ANIM)
-                );
-//                controllers.add(new AnimationController<>(this, "idle", state -> state.setAndContinue(IDLE_ANIM)));
+        });
+        controllers.add(headLook);
     }
 
     @Override
@@ -159,10 +187,10 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
                 new FirstApplicableBehaviour<>(
                         new TargetOrRetaliate<>(),
                         new SetPlayerLookTarget<>(),
-                        new SetRandomLookTarget<>()
+                        new SetRandomLookTarget<>().lookTime(e-> e.getRandom().nextInt(20, 80))
                 ),
                 new OneRandomBehaviour<>(
-                        new SetRandomWalkTarget<>(),
+                        new SetRandomWalkTarget<>().cooldownForBetween(40, 120),
                         new Idle<>().runFor(e -> e.getRandom().nextInt(30, 60))
                 )
         );
