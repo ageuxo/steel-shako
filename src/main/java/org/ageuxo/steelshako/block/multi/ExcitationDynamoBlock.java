@@ -14,7 +14,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -36,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ExcitationDynamoBlock extends Block implements EntityBlock {
+public class ExcitationDynamoBlock extends BaseMultiBlockBlock {
 
     public ExcitationDynamoBlock(Properties properties) {
         super(properties.noOcclusion()

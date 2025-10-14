@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -18,7 +17,7 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.ageuxo.steelshako.block.multi.ExcitationDynamoPart;
-import org.ageuxo.steelshako.block.multi.MultiblockCore;
+import org.ageuxo.steelshako.block.multi.MultiblockCoreBlockEntity;
 import org.ageuxo.steelshako.render.model.ModelProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ExcitationDynamoBlockEntity extends BlockEntity implements MultiblockCore {
+public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity {
 
     private final FluidTank waterTank = new FluidTank(16000, f -> f.is(FluidTags.WATER)){
         @Override
