@@ -28,6 +28,7 @@ public class DelegatingBlockEntity extends BlockEntity implements MultiblockDele
 
     private final Vector3i modelPos = new Vector3i();
     private final Vector3i coreOffset = new Vector3i();
+    private boolean isDisassembling = false;
 
     private DelegatingBlockEntity(BlockEntityType<DelegatingBlockEntity> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -101,5 +102,20 @@ public class DelegatingBlockEntity extends BlockEntity implements MultiblockDele
     public void initDelegate(BlockPos corePos) {
         BlockPos pos = this.getBlockPos();
         this.coreOffset.set(corePos.getX() - pos.getX(), corePos.getY() - pos.getY(), corePos.getZ() - pos.getZ());
+    }
+
+    @Override
+    public Vector3i getCoreOffset() {
+        return this.coreOffset;
+    }
+
+    @Override
+    public boolean isDisassembled() {
+        return this.isDisassembling;
+    }
+
+    @Override
+    public void setDisassembled(boolean bool) {
+        this.isDisassembling = bool;
     }
 }

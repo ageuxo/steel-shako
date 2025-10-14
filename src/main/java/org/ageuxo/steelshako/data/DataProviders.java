@@ -53,6 +53,7 @@ public class DataProviders {
         generator.addProvider(
                 event.includeServer(), (DataProvider.Factory<LootTableProvider>) (provider) -> new LootTableProvider(output, Set.of(),
                         List.of(
+                                new LootTableProvider.SubProviderEntry(ModBlockLootSubProvider::new, LootContextParamSets.BLOCK),
                                 new LootTableProvider.SubProviderEntry(ModEntityLootSubProvider::new, LootContextParamSets.ENTITY)
                         ),
                         lookupProvider
