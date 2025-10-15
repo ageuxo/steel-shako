@@ -32,6 +32,7 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         this.add(ModBlocks.GRUEL_FLUID.get(), noDrop());
+        this.add(ModBlocks.MANGALAN_FLUID.get(), noDrop());
         itemDropOnStateProperty(ModBlocks.EXCITATION_DYNAMO_BLOCK, ModItems.EXCITATION_DYNAMO_DEPLOYER, ExcitationDynamoPart.PROPERTY, ExcitationDynamoPart.CORE);
         itemDropOnStateProperty(ModBlocks.VAT_BLOCK, ModItems.VAT_DEPLOYER, VatPart.PROPERTY, VatPart.CORE);
     }

@@ -90,6 +90,18 @@ public class ClientEvents {
                 return SteelShakoMod.modRL("block/fluid/gruel_flowing");
             }
         }, ModFluids.GRUEL_TYPE);
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public @NotNull ResourceLocation getStillTexture() {
+                return SteelShakoMod.modRL("block/fluid/mangalan_still");
+            }
+
+            @Override
+            public @NotNull ResourceLocation getFlowingTexture() {
+                return SteelShakoMod.modRL("block/fluid/mangalan_flowing");
+            }
+        }, ModFluids.MANGALAN_TYPE);
     }
 
     @SubscribeEvent
