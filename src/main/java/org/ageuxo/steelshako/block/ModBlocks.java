@@ -14,5 +14,6 @@ public class ModBlocks {
     public static final DeferredBlock<ExcitationDynamoBlock> EXCITATION_DYNAMO_BLOCK = BLOCKS.registerBlock("excitation_dynamo", ExcitationDynamoBlock::new);
 
     public static final DeferredBlock<LiquidBlock> GRUEL_FLUID = BLOCKS.registerBlock("gruel", (p)-> new LiquidBlock(ModFluids.GRUEL.get(), p.replaceable()));
+    public static final DeferredBlock<LiquidBlock> MANGALAN_FLUID = BLOCKS.registerBlock("mangalan", (p)-> new LiquidBlock(ModFluids.MANGALAN.get(), p.replaceable()));
 
 }

@@ -14,9 +14,12 @@ public class ModItems {
 
     public static final DeferredHolder<Item, MiningRayGun> MINING_RAY_GUN = ITEMS.register("mining_ray_gun", ()-> new MiningRayGun(new Item.Properties()));
     public static final DeferredHolder<Item, RayPistol> RAY_PISTOL = ITEMS.register("ray_pistol", ()-> new RayPistol(new Item.Properties()));
+    public static final DeferredItem<Item> VACUUM_TUBE = ITEMS.registerItem("vacuum_tube", Item::new);
+
     public static final DeferredItem<DeployerItem> VAT_DEPLOYER = ITEMS.registerItem("vat_deployer", (p) -> new DeployerItem(p, MultiBlockType.GRUEL_VAT));
     public static final DeferredItem<DeployerItem> EXCITATION_DYNAMO_DEPLOYER = ITEMS.registerItem("excitation_dynamo_deployer", (p) -> new DeployerItem(p, MultiBlockType.EXCITATION_DYNAMO));
+
     public static final DeferredItem<BucketItem> GRUEL_BUCKET = ITEMS.registerItem("gruel_bucket", (p)-> new BucketItem(ModFluids.GRUEL.get(), p));
-    public static final DeferredItem<Item> VACUUM_TUBE = ITEMS.registerItem("vacuum_tube", Item::new);
+    public static final DeferredItem<BucketItem> MANGALAN_BUCKET = ITEMS.registerItem("mangalan_bucket", (p)-> new BucketItem(ModFluids.MANGALAN.get(), p));
 
 }
