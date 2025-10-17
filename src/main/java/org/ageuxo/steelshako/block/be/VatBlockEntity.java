@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,6 +47,7 @@ public class VatBlockEntity extends MultiblockCoreBlockEntity {
 
     public VatBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.GRUEL_VAT.get(), pos, blockState);
+        this.data = new SimpleContainerData(4);
     }
 
     public ItemStackHandler fuelStorage() {
@@ -71,6 +73,11 @@ public class VatBlockEntity extends MultiblockCoreBlockEntity {
     }
 
     @Override
+    public IItemHandler getItemCapDirect() {
+        return fuelStorage;
+    }
+
+    @Override
     public @Nullable IFluidHandler getFluidCap(BlockState state, Direction side) {
         VatPart part = state.getValue(VatPart.PROPERTY);
         if (part == VatPart.TANK) {
@@ -80,6 +87,11 @@ public class VatBlockEntity extends MultiblockCoreBlockEntity {
         }
 
         return null;
+    }
+
+    @Override
+    public IFluidHandler getFluidCapDirect() {
+        return waterTank;
     }
 
     @Override

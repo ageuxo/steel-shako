@@ -11,10 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -23,6 +20,7 @@ import org.ageuxo.steelshako.block.be.ModBlockEntities;
 import org.ageuxo.steelshako.entity.ModEntityTypes;
 import org.ageuxo.steelshako.entity.render.RayRenderer;
 import org.ageuxo.steelshako.item.ModItems;
+import org.ageuxo.steelshako.menu.ModMenuTypes;
 import org.ageuxo.steelshako.render.ArmPoseExtension;
 import org.ageuxo.steelshako.render.ItemHandPoses;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
@@ -31,6 +29,7 @@ import org.ageuxo.steelshako.render.geo.AutomatonRenderer;
 import org.ageuxo.steelshako.render.model.MultiblockGeometryLoader;
 import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.ageuxo.steelshako.render.particle.provider.RayParticleProvider;
+import org.ageuxo.steelshako.render.screen.BoilerScreen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,6 +107,11 @@ public class ClientEvents {
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ModParticles.RED_RAY_BEAM.get(), RayParticleProvider::new);
         event.registerSpriteSet(ModParticles.ORANGE_RAY_BEAM.get(), RayParticleProvider::new);
+    }
+
+    @SubscribeEvent
+    public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenuTypes.BOILER.get(), BoilerScreen::new);
     }
 
 }

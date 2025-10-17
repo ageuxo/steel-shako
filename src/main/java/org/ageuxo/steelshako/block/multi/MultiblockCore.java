@@ -27,8 +27,12 @@ public interface MultiblockCore {
     @Nullable
     IItemHandler getItemCap(BlockState state, Direction side);
 
+    IItemHandler getItemCapDirect();
+
     @Nullable
     IFluidHandler getFluidCap(BlockState state, Direction side);
+
+    IFluidHandler getFluidCapDirect();
 
     boolean isDisassembled();
     void disassemble();

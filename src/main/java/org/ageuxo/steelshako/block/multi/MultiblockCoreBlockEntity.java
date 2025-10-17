@@ -1,6 +1,7 @@
 package org.ageuxo.steelshako.block.multi;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,6 +12,7 @@ public abstract class MultiblockCoreBlockEntity extends BlockEntity implements M
     protected boolean isDisassembled;
     protected Vector3i minCorner;
     protected Vector3i maxCorner;
+    protected ContainerData data;
 
     public MultiblockCoreBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -58,5 +60,9 @@ public abstract class MultiblockCoreBlockEntity extends BlockEntity implements M
 
     public Vector3i maxCorner() {
         return maxCorner;
+    }
+
+    public ContainerData data() {
+        return data;
     }
 }
