@@ -33,6 +33,19 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
     protected void generate() {
         this.add(ModBlocks.GRUEL_FLUID.get(), noDrop());
         this.add(ModBlocks.MANGALAN_FLUID.get(), noDrop());
+
+        this.add(ModBlocks.GRUEL_SHROOM.get(),
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1))
+                                        .add(
+                                                LootItem.lootTableItem(ModItems.GRUEL_SPORE)
+                                                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                                        )
+                        )
+        );
+
         itemDropOnStateProperty(ModBlocks.EXCITATION_DYNAMO_BLOCK, ModItems.EXCITATION_DYNAMO_DEPLOYER, ExcitationDynamoPart.PROPERTY, ExcitationDynamoPart.CORE);
         itemDropOnStateProperty(ModBlocks.VAT_BLOCK, ModItems.VAT_DEPLOYER, VatPart.PROPERTY, VatPart.CORE);
     }
