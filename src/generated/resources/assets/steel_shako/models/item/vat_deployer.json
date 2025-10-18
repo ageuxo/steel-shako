@@ -1,0 +1,6 @@
+{
+  "parent": "steel_shako:block/deployer_crate",
+  "textures": {
+    "front": "steel_shako:item/vat_deployer"
+  }
+}

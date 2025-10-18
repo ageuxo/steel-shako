@@ -28,6 +28,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         fluid(ModBlocks.MANGALAN_FLUID);
         fluid(ModBlocks.GRUEL_FLUID);
+
+        deployerCrateModel();
+
+    }
+
+    private void deployerCrateModel() {
+        models().orientable("deployer_crate", modLoc("block/crate"), modLoc("block/crate"), modLoc("block/crate"));
     }
 
     private void fluid(Holder<Block> block) {
