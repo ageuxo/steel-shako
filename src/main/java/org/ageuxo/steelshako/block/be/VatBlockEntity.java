@@ -268,6 +268,16 @@ public class VatBlockEntity extends MultiblockCoreBlockEntity {
         this.progress = tag.getInt("progress");
     }
 
+    @Override
+    public void dropContents() {
+        if (level != null){
+            for (int i = 0; i < this.storage.getSlots(); i++) {
+                ItemStack stack = this.storage.extractItem(i, Integer.MAX_VALUE, false);
+                Block.popResource(level, getBlockPos(), stack);
+            }
+        }
+    }
+
     public AABB renderBounds() {
         if (renderBounds == null) {
             renderBounds = AABB.ofSize(this.getBlockPos().getCenter().add(0, 1, 0), 5, 4, 5);

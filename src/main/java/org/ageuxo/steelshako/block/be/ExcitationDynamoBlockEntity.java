@@ -235,6 +235,16 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity {
         this.maxFuelBurning = Math.max(maxFuelBurning, 1);
     }
 
+    @Override
+    public void dropContents() {
+        if (level != null){
+            for (int i = 0; i < this.storage.getSlots(); i++) {
+                ItemStack stack = this.storage.extractItem(i, Integer.MAX_VALUE, false);
+                Block.popResource(level, getBlockPos(), stack);
+            }
+        }
+    }
+
     public AABB renderBounds() {
         if (renderBounds == null) {
             renderBounds = new AABB(this.getBlockPos().above()).inflate(1.5);
