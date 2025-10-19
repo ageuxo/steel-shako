@@ -50,7 +50,7 @@ public class VatBlockEntity extends MultiblockCoreBlockEntity {
             if (slot == 0) {
                 return stack.getBurnTime(RecipeType.SMELTING) > 0;
             } else if (slot == 1) {
-                return stack.is(ModItems.GRUEL_SPORE);
+                return stack.is(ModItems.GRUEL_SPORES);
             }
 
             return false;
@@ -122,7 +122,7 @@ public class VatBlockEntity extends MultiblockCoreBlockEntity {
             List<ItemEntity> entities = level.getEntities(EntityType.ITEM, vatOpening, EntitySelector.ENTITY_STILL_ALIVE);
             for (ItemEntity e : entities) {
                 ItemStack stack = e.getItem();
-                if (stack.is(ModItems.GRUEL_SPORE)) {
+                if (stack.is(ModItems.GRUEL_SPORES)) {
                     ItemStack remaining = be.storage().insertItem(1, stack, false);
                     e.setItem(remaining);
                     if (be.soundCooldown <= 0) {

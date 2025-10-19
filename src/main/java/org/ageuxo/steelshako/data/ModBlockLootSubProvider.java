@@ -40,7 +40,7 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
                                 LootPool.lootPool()
                                         .setRolls(ConstantValue.exactly(1))
                                         .add(
-                                                LootItem.lootTableItem(ModItems.GRUEL_SPORE)
+                                                LootItem.lootTableItem(ModItems.GRUEL_SPORES)
                                                         .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
                                         )
                         )

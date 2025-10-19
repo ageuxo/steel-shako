@@ -20,6 +20,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.MANGALAN_BUCKET.get());
 
         basicItem(ModItems.VACUUM_TUBE.get());
+        basicItem(ModItems.GRUEL_SPORES.get());
 
         deployerCrate("vat_deployer", "item/vat_deployer");
         deployerCrate("excitation_dynamo_deployer", "item/excitation_dynamo_deployer");
