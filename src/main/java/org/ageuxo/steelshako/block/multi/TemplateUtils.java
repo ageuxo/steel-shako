@@ -32,6 +32,7 @@ public class TemplateUtils {
                 for (BlockPos placePos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
                     if (level.getBlockEntity(placePos) instanceof MultiblockCore core) {
                         core.initCore(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ());
+                        level.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), Block.UPDATE_ALL);
                     }
                 }
                 return true;

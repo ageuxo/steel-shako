@@ -233,20 +233,6 @@ public class VatBlockEntity extends MultiblockCoreBlockEntity {
     }
 
     @Override
-    public @NotNull ModelData getModelData() {
-        return ModelData.builder()
-                .with(ModelProperties.OFFSET_PROP, new Vec3i(0, 0, 0))
-                .build();
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
-    }
-
-    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         if (!this.waterTank.isEmpty()){

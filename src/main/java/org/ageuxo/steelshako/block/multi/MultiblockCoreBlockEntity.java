@@ -2,11 +2,20 @@ package org.ageuxo.steelshako.block.multi;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import org.ageuxo.steelshako.render.model.ModelProperties;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3i;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -56,6 +65,20 @@ public abstract class MultiblockCoreBlockEntity extends BlockEntity implements M
     }
 
     @Override
+    public @NotNull ModelData getModelData() {
+        return ModelData.builder()
+                .with(ModelProperties.OFFSET_PROP, new Vec3i(0, 0, 0))
+                .build();
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         Vector3i min = this.minCorner;
@@ -71,6 +94,25 @@ public abstract class MultiblockCoreBlockEntity extends BlockEntity implements M
         this.minCorner.set(min.length == 3 ? min : new int[]{0, 0, 0});
         int[] max = tag.getIntArray("corner_max");
         this.minCorner.set(max.length == 3 ? max : new int[]{0, 0, 0});
+        requestModelDataUpdate();
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
+        requestModelDataUpdate();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.handleUpdateTag(tag, lookupProvider);
+        requestModelDataUpdate();
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public abstract void dropContents();

@@ -3,11 +3,7 @@ package org.ageuxo.steelshako.block.be;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
@@ -21,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -31,18 +26,29 @@ import org.ageuxo.steelshako.block.multi.ExcitationDynamoPart;
 import org.ageuxo.steelshako.block.multi.MultiblockCoreBlockEntity;
 import org.ageuxo.steelshako.charge.ChargeHolder;
 import org.ageuxo.steelshako.item.component.ModComponents;
-import org.ageuxo.steelshako.render.model.ModelProperties;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity {
+public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity implements GeoBlockEntity {
+
+    public static final RawAnimation SPINNING = RawAnimation.begin().thenPlay("spin_up").thenPlay("spinning");
+    public static final RawAnimation SPIN_DOWN = RawAnimation.begin().thenPlay("spin_down");
+    public static final RawAnimation INSERT_CRYSTAL = RawAnimation.begin().thenPlay("crystal_lift").thenLoop("crystal_bob");
 
     // Water use per tick
     public static final int WATER_RATE = 5;
     public static final int CHARGE_RATE = 10;
+
+    private AnimatableInstanceCache instanceCache;
     private boolean isBoiling = false;
     private int fuelBurning = 0;
     private int maxFuelBurning = 1;
@@ -201,20 +207,6 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity {
     }
 
     @Override
-    public @NotNull ModelData getModelData() {
-        return ModelData.builder()
-                .with(ModelProperties.OFFSET_PROP, new Vec3i(0, 0, 0))
-                .build();
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
-    }
-
-    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         if (!this.waterTank.isEmpty()){
@@ -252,9 +244,28 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity {
         return renderBounds;
     }
 
-    @Nullable
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "crystal", state -> {
+            if (!this.storage.getStackInSlot(1).isEmpty() && this.isBoiling()) {
+                return state.setAndContinue(INSERT_CRYSTAL);
+            }
+
+            return PlayState.STOP;
+        }));
+        controllers.add(new AnimationController<>(this, "coils", state -> {
+            if (!this.storage.getStackInSlot(1).isEmpty() && this.isBoiling()) {
+                return state.setAndContinue(SPINNING);
+            }
+            return state.setAndContinue(SPIN_DOWN);
+        }));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        if (instanceCache == null) {
+            instanceCache = GeckoLibUtil.createInstanceCache(this);
+        }
+        return instanceCache;
     }
 }

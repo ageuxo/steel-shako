@@ -24,6 +24,7 @@ import org.ageuxo.steelshako.menu.ModMenuTypes;
 import org.ageuxo.steelshako.render.ArmPoseExtension;
 import org.ageuxo.steelshako.render.ItemHandPoses;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
+import org.ageuxo.steelshako.render.ber.ExcitationDynamoRenderer;
 import org.ageuxo.steelshako.render.ber.VatBlockEntityRenderer;
 import org.ageuxo.steelshako.render.geo.AutomatonRenderer;
 import org.ageuxo.steelshako.render.model.MultiblockGeometryLoader;
@@ -42,6 +43,7 @@ public class ClientEvents {
         event.registerEntityRenderer(ModEntityTypes.AUTOMATON.get(), AutomatonRenderer::new);
 
         event.registerBlockEntityRenderer(ModBlockEntities.GRUEL_VAT.get(), VatBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.EXCITATION_DYNAMO.get(), ExcitationDynamoRenderer::new);
     }
 
     @SubscribeEvent
