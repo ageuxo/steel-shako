@@ -11,10 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.SupportType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,7 +45,7 @@ public class GruelShroomBlock extends Block implements BonemealableBlock {
     }
 
     public GruelShroomBlock(Properties properties) {
-        super(properties);
+        super(properties.sound(SoundType.FUNGUS));
         registerDefaultState(
                 defaultBlockState()
                         .setValue(FACING, Direction.NORTH)
@@ -75,13 +72,15 @@ public class GruelShroomBlock extends Block implements BonemealableBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction dir = context.getHorizontalDirection();
-        Level level = context.getLevel();
-        BlockState state = defaultBlockState()
-                .setValue(FACING, dir.getOpposite())
-                .setValue(AGE, 0);
-        if (canSurvive(state, level, context.getClickedPos())) {
-            return state;
+        Direction dir = context.getClickedFace();
+        if (dir.getAxis().isHorizontal()) {
+            Level level = context.getLevel();
+            BlockState state = defaultBlockState()
+                    .setValue(FACING, dir)
+                    .setValue(AGE, 0);
+            if (canSurvive(state, level, context.getClickedPos())) {
+                return state;
+            }
         }
 
         return null;

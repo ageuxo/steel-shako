@@ -9,6 +9,9 @@
 		"3": "steel_shako:block/shroom_2",
 		"particle": "steel_shako:block/shroom_4"
 	},
+	"transform": {
+		"rotation": [-2.5, 0, 0]
+	},
 	"elements": [
 		{
 			"from": [0, 2, 0],
