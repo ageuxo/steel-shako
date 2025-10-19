@@ -14,6 +14,8 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.ageuxo.steelshako.block.GruelShroomBlock;
 import org.ageuxo.steelshako.block.ModBlocks;
 import org.ageuxo.steelshako.block.multi.ExcitationDynamoPart;
 import org.ageuxo.steelshako.block.multi.VatPart;
@@ -40,8 +42,17 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
                                 LootPool.lootPool()
                                         .setRolls(ConstantValue.exactly(1))
                                         .add(
-                                                LootItem.lootTableItem(ModItems.GRUEL_SPORES)
-                                                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)))
+                                                this.applyExplosionDecay(
+                                                        ModBlocks.GRUEL_SHROOM,
+                                                        LootItem.lootTableItem(ModItems.GRUEL_SPORES)
+                                                                .apply(
+                                                                        SetItemCountFunction.setCount(UniformGenerator.between(1, 3))
+                                                                                .when(
+                                                                                        LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.GRUEL_SHROOM.get())
+                                                                                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GruelShroomBlock.AGE, 3))
+                                                                                )
+                                                                )
+                                                )
                                         )
                         )
         );
