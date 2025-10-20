@@ -22,6 +22,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.*;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.ageuxo.steelshako.ModDamageTypes;
 import org.ageuxo.steelshako.attachment.MiningRayCache;
@@ -34,6 +36,7 @@ import org.ageuxo.steelshako.render.geo.MiningRayGunRenderer;
 import org.ageuxo.steelshako.render.particle.ModParticles;
 import org.ageuxo.steelshako.render.particle.VectorOption;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -47,7 +50,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
+public class MiningRayGun extends Item implements GeoItem {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static int RAMPUP_TIME = 30;
     public static int RAY_TICK_CHARGE_COST = 10;
@@ -97,18 +100,35 @@ public class MiningRayGun extends Item implements ChargeHolder, GeoItem {
     protected void tickBeam(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack) {
         int rampup = stack.getOrDefault(ModComponents.RAY_RAMPUP, 0);
         if (rampup > RAMPUP_TIME) {
-            ChargeComponent component = stack.getOrDefault(ModComponents.CHARGE.get(), new ChargeComponent(50000, 50000));
-            if (component.charge() >= RAY_TICK_CHARGE_COST) {
-                doBeam(level, livingEntity, stack);
-                stack.set(ModComponents.CHARGE.get(), component.sub(RAY_TICK_CHARGE_COST)); // subtract charge, replace component
-                if (level instanceof ServerLevel serverLevel) {
-                    triggerAnim(livingEntity, GeoItem.getOrAssignId(stack, serverLevel), "firing", "spinning");
+            ItemStack chargeHolder = getChargeHolderInInventory(livingEntity);
+            if (chargeHolder != null) {
+                ChargeComponent component = chargeHolder.get(ModComponents.CHARGE.get());
+                if (component != null && component.charge() >= RAY_TICK_CHARGE_COST) {
+                    doBeam(level, livingEntity, stack);
+                    chargeHolder.set(ModComponents.CHARGE.get(), component.sub(RAY_TICK_CHARGE_COST)); // subtract charge, replace component
+                    if (level instanceof ServerLevel serverLevel) {
+                        triggerAnim(livingEntity, GeoItem.getOrAssignId(stack, serverLevel), "firing", "spinning");
+                    }
                 }
             }
         } else {
             stack.set(ModComponents.RAY_RAMPUP, rampup + 1);
         }
 
+    }
+
+    protected @Nullable ItemStack getChargeHolderInInventory(LivingEntity entity) {
+        IItemHandler handler = entity.getCapability(Capabilities.ItemHandler.ENTITY);
+        if (handler != null) {
+            for (int i = 0; i < handler.getSlots(); i++) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (stack.getItem() instanceof ChargeHolder) {
+                    return stack;
+                }
+            }
+        }
+
+        return null;
     }
 
     protected void doBeam(@NotNull Level level, @NotNull LivingEntity shooter, @NotNull ItemStack stack) {

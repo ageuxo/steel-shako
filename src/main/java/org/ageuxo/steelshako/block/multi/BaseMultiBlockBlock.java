@@ -1,6 +1,8 @@
 package org.ageuxo.steelshako.block.multi;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -25,5 +27,14 @@ public abstract class BaseMultiBlockBlock extends Block implements EntityBlock {
             delegate.disassemble(level, pos);
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity != null) {
+            blockEntity.requestModelDataUpdate();
+        }
+        level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
     }
 }

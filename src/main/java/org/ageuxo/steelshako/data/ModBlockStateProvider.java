@@ -11,6 +11,7 @@ import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.ageuxo.steelshako.SteelShakoMod;
+import org.ageuxo.steelshako.block.GruelShroomBlock;
 import org.ageuxo.steelshako.block.ModBlocks;
 
 import java.util.function.Supplier;
@@ -28,6 +29,25 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         fluid(ModBlocks.MANGALAN_FLUID);
         fluid(ModBlocks.GRUEL_FLUID);
+
+        deployerCrateModel();
+        gruelshroomShelf();
+    }
+
+    private void gruelshroomShelf() {
+        getVariantBuilder(ModBlocks.GRUEL_SHROOM.get())
+                .forAllStates(state -> {
+                    int age = state.getValue(GruelShroomBlock.AGE);
+                    Direction facing = state.getValue(GruelShroomBlock.FACING);
+                    return ConfiguredModel.builder()
+                            .modelFile(models().getExistingFile(modLoc("block/gruelshroom_shelf_"+(age+1))))
+                            .rotationY((int) (facing.getOpposite().toYRot()))
+                            .build();
+                });
+    }
+
+    private void deployerCrateModel() {
+        models().orientable("deployer_crate", modLoc("block/crate"), modLoc("block/crate"), modLoc("block/crate"));
     }
 
     private void fluid(Holder<Block> block) {

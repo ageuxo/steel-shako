@@ -16,4 +16,6 @@ public class ModBlocks {
     public static final DeferredBlock<LiquidBlock> GRUEL_FLUID = BLOCKS.registerBlock("gruel", (p)-> new LiquidBlock(ModFluids.GRUEL.get(), p.replaceable()));
     public static final DeferredBlock<LiquidBlock> MANGALAN_FLUID = BLOCKS.registerBlock("mangalan", (p)-> new LiquidBlock(ModFluids.MANGALAN.get(), p.replaceable()));
 
+    public static final DeferredBlock<GruelShroomBlock> GRUEL_SHROOM = BLOCKS.registerBlock("gruel_shroom", GruelShroomBlock::new);
+
 }

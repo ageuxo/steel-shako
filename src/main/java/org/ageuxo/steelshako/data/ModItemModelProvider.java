@@ -2,10 +2,8 @@ package org.ageuxo.steelshako.data;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BucketItem;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredItem;
 import org.ageuxo.steelshako.SteelShakoMod;
 import org.ageuxo.steelshako.item.ModItems;
 
@@ -18,16 +16,22 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        filledBucket(ModItems.GRUEL_BUCKET, "item/gruel_bucket_mask");
-        filledBucket(ModItems.MANGALAN_BUCKET, "item/mangalan_bucket_mask");
+        basicItem(ModItems.GRUEL_BUCKET.get());
+        basicItem(ModItems.MANGALAN_BUCKET.get());
 
         basicItem(ModItems.VACUUM_TUBE.get());
+        basicItem(ModItems.GRUEL_SPORES.get());
+        basicItem(ModItems.CRYSTAL.get());
+        withExistingParent(ModItems.INERT_CRYSTAL.getRegisteredName(), ModItems.CRYSTAL.getId());
+
+        deployerCrate("vat_deployer", "item/vat_deployer");
+        deployerCrate("excitation_dynamo_deployer", "item/excitation_dynamo_deployer");
 
     }
 
-    private void filledBucket(DeferredItem<BucketItem> bucketItem, String maskPath) {
-        withExistingParent(bucketItem.getId().toString(), mcLoc("item/generated"))
-                .texture("layer1", modLoc(maskPath))
-                .texture("layer0", mcLoc("item/bucket"));
+    private void deployerCrate(String name, String frontPath) {
+        withExistingParent(name, modLoc("block/deployer_crate"))
+                .texture("front", modLoc(frontPath));
     }
+
 }

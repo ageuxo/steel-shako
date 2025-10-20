@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/bucket",
-    "layer1": "steel_shako:item/gruel_bucket_mask"
+    "layer0": "steel_shako:item/gruel_bucket"
   }
 }

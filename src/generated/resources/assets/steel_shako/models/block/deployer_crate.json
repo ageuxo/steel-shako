@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "steel_shako:block/crate",
+    "side": "steel_shako:block/crate",
+    "top": "steel_shako:block/crate"
+  }
+}

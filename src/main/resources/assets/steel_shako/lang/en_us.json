@@ -1,0 +1,6 @@
+{
+  "item.steel_shako.crystal": "Crystal",
+  "item.steel_shako.excitation_dynamo_deployer": "Deployer: Excitation Dynamo",
+  "gui.steel_shako.boiler": "Boiler",
+  "gui.steel_shako.widget.bar.fluid": "%s / %s mB"
+}
