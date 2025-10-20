@@ -22,6 +22,7 @@ import org.ageuxo.steelshako.entity.render.RayRenderer;
 import org.ageuxo.steelshako.item.ModItems;
 import org.ageuxo.steelshako.menu.ModMenuTypes;
 import org.ageuxo.steelshako.render.ArmPoseExtension;
+import org.ageuxo.steelshako.render.ChargeItemDecorator;
 import org.ageuxo.steelshako.render.ItemHandPoses;
 import org.ageuxo.steelshako.render.MiningRayProgressRenderer;
 import org.ageuxo.steelshako.render.ber.ExcitationDynamoRenderer;
@@ -114,6 +115,11 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.BOILER.get(), BoilerScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
+        event.register(ModItems.CRYSTAL, ChargeItemDecorator.INSTANCE);
     }
 
 }

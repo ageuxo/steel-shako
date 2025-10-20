@@ -21,6 +21,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         basicItem(ModItems.VACUUM_TUBE.get());
         basicItem(ModItems.GRUEL_SPORES.get());
+        basicItem(ModItems.CRYSTAL.get());
+        withExistingParent(ModItems.INERT_CRYSTAL.getRegisteredName(), ModItems.CRYSTAL.getId());
 
         deployerCrate("vat_deployer", "item/vat_deployer");
         deployerCrate("excitation_dynamo_deployer", "item/excitation_dynamo_deployer");
