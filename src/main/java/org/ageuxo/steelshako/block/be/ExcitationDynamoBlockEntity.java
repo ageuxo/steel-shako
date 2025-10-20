@@ -174,7 +174,11 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity imple
             be.fuelBurning = burnTime;
             be.maxFuelBurning = burnTime;
             be.setBoiling(true);
+            be.triggerAnim("coils", "spinning");
         } else {
+            if (be.isBoiling) {
+                be.triggerAnim("coils", "spin_down");
+            }
             be.setBoiling(false);
         }
         be.soundCooldown--;
@@ -268,19 +272,13 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity imple
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "crystal", state -> {
-            if (!this.storage.getStackInSlot(1).isEmpty() && this.isBoiling()) {
-                return state.setAndContinue(INSERT_CRYSTAL);
-            }
-
-            return PlayState.STOP;
-        }));
-        controllers.add(new AnimationController<>(this, "coils", state -> {
-            if (!this.storage.getStackInSlot(1).isEmpty() && this.isBoiling()) {
-                return state.setAndContinue(SPINNING);
-            }
-            return state.setAndContinue(SPIN_DOWN);
-        }));
+        controllers.add(new AnimationController<>(this, "crystal", state -> PlayState.CONTINUE)
+                .triggerableAnim("insert", INSERT_CRYSTAL)
+        );
+        controllers.add(new AnimationController<>(this, "coils", state -> PlayState.CONTINUE)
+                .triggerableAnim("spinning", SPINNING)
+                .triggerableAnim("spin_down", SPIN_DOWN)
+        );
     }
 
     @Override

@@ -166,6 +166,7 @@ public class ExcitationDynamoBlock extends BaseMultiBlockBlock {
                 ItemStack chargeSlot = core.getChargeSlot();
                 if (chargeSlot.isEmpty()) {
                     player.setItemInHand(InteractionHand.MAIN_HAND, insertChargeItem(player, core)); // Insert item in hand
+                    core.triggerAnim("crystal", "insert");
                     return ItemInteractionResult.SUCCESS;
                 } else {
                     ItemStack extracted = core.getItemCapDirect().extractItem(1, 1, false);
