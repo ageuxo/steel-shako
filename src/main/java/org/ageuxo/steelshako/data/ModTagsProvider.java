@@ -2,14 +2,17 @@ package org.ageuxo.steelshako.data;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.ageuxo.steelshako.ModTags;
+import org.ageuxo.steelshako.block.ModBlocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,5 +60,18 @@ public class ModTagsProvider {
                     .addTag(EntityTypeTags.ILLAGER);
         }
 
+    }
+
+    public static class Biomes extends BiomeTagsProvider {
+
+        public Biomes(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, provider, modId, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider provider) {
+            this.tag(ModTags.HAS_MANGALAN_SPRINGS)
+                    .addTag(BiomeTags.IS_OVERWORLD);
+        }
     }
 }

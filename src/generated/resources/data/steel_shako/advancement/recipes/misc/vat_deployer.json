@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gruel_spores": {
+      "conditions": {
+        "items": [
+          {
+            "items": "steel_shako:gruel_spores"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "steel_shako:vat_deployer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_gruel_spores"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "steel_shako:vat_deployer"
+    ]
+  }
+}

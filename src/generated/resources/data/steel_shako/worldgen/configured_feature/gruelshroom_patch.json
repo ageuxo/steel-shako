@@ -1,0 +1,12 @@
+{
+  "type": "steel_shako:wall_support",
+  "config": {
+    "block_id": "steel_shako:gruel_shroom",
+    "horizontal_radius": 4,
+    "predicate": {
+      "block": "steel_shako:mangalan",
+      "predicate_type": "minecraft:block_match"
+    },
+    "vertical_radius": 2
+  }
+}
