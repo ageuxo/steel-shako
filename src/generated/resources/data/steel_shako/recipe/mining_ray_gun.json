@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "C": {
+      "item": "steel_shako:crystal"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "V": {
+      "item": "steel_shako:vacuum_tube"
+    }
+  },
+  "pattern": [
+    " VV",
+    "CBP",
+    "VVP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "steel_shako:mining_ray_gun"
+  }
+}

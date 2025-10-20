@@ -11,8 +11,12 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.ageuxo.steelshako.ModDamageTypes;
 import org.ageuxo.steelshako.SteelShakoMod;
+import org.ageuxo.steelshako.worldgen.ModBiomeModifiers;
+import org.ageuxo.steelshako.worldgen.ModConfiguredFeatures;
+import org.ageuxo.steelshako.worldgen.ModPlacements;
 
 import java.util.List;
 import java.util.Set;
@@ -36,6 +40,14 @@ public class DataProviders {
 
         generator.addProvider(
                 event.includeServer(), new ModTagsProvider.Entity(output, lookupProvider, SteelShakoMod.MOD_ID, fileHelper)
+        );
+
+        generator.addProvider(
+                event.includeServer(), new ModTagsProvider.Biomes(output, lookupProvider, SteelShakoMod.MOD_ID, fileHelper)
+        );
+
+        generator.addProvider(
+                event.includeServer(), new ModRecipeProvider(output, lookupProvider)
         );
 
         generator.addProvider(
@@ -64,7 +76,10 @@ public class DataProviders {
         generator.addProvider(
                 event.includeServer(),
                 (DataProvider.Factory<DatapackBuiltinEntriesProvider>) out -> new DatapackBuiltinEntriesProvider(out, lookupProvider, new RegistrySetBuilder()
-                        .add(Registries.DAMAGE_TYPE, ModDamageTypes::addDamageTypes),
+                        .add(Registries.DAMAGE_TYPE, ModDamageTypes::addDamageTypes)
+                        .add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap)
+                        .add(Registries.PLACED_FEATURE, ModPlacements::bootstrap)
+                        .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap),
                         Set.of(SteelShakoMod.MOD_ID)
                 )
         );

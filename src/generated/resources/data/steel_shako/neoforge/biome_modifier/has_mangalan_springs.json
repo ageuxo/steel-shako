@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#steel_shako:has_mangalan_springs",
+  "features": "steel_shako:mangalan_spring_placed",
+  "step": "fluid_springs"
+}

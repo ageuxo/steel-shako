@@ -1,6 +1,15 @@
 {
   "item.steel_shako.crystal": "Crystal",
   "item.steel_shako.excitation_dynamo_deployer": "Deployer: Excitation Dynamo",
+  "item.steel_shako.vat_deployer": "Deployer: Gruel Vat",
+  "item.steel_shako.gruel_bucket": "Gruel Bucket",
+  "item.steel_shako.mangalan_bucket": "Mangalan Bucket",
+  "item.steel_shako.mining_ray_gun": "Mining Ray Gun",
+  "item.steel_shako.ray_pistol": "Ray Pistol",
+  "item.steel_shako.vacuum_tube": "Vacuum tube",
+  "item.steel_shako.inert_crystal": "Inert Crystal",
+  "item.steel_shako.gruel_spores": "Gruelshroom Spores",
   "gui.steel_shako.boiler": "Boiler",
-  "gui.steel_shako.widget.bar.fluid": "%s / %s mB"
+  "gui.steel_shako.widget.bar.fluid": "%s / %s mB",
+  "itemGroup.steel_shako.main": "Steel Shako"
 }

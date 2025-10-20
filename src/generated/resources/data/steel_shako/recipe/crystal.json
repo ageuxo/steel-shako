@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "steel_shako:mangalan_bucket"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "RRR",
+    "RMR",
+    "RRR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "steel_shako:crystal"
+  }
+}
