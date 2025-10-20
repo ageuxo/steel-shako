@@ -24,8 +24,10 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.ageuxo.steelshako.block.multi.ExcitationDynamoPart;
 import org.ageuxo.steelshako.block.multi.MultiblockCoreBlockEntity;
-import org.ageuxo.steelshako.charge.ChargeHolder;
+import org.ageuxo.steelshako.item.ModItems;
+import org.ageuxo.steelshako.item.component.ChargeComponent;
 import org.ageuxo.steelshako.item.component.ModComponents;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -40,7 +42,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity implements GeoBlockEntity {
 
-    public static final RawAnimation SPINNING = RawAnimation.begin().thenPlay("spin_up").thenPlay("spinning");
+    public static final RawAnimation SPINNING = RawAnimation.begin().thenPlay("spin_up").thenLoop("spinning");
     public static final RawAnimation SPIN_DOWN = RawAnimation.begin().thenPlay("spin_down");
     public static final RawAnimation INSERT_CRYSTAL = RawAnimation.begin().thenPlay("crystal_lift").thenLoop("crystal_bob");
 
@@ -71,9 +73,20 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity imple
         public boolean isItemValid(int slot, ItemStack stack) {
             if (slot == 0) {
                 return stack.getBurnTime(RecipeType.SMELTING) > 0;
-            } else {
-                return stack.getComponents().has(ModComponents.CHARGE.get());
+            } else if (slot == 1) {
+                if (stack.is(ModItems.CRYSTAL)) {
+                    ChargeComponent component = stack.get(ModComponents.CHARGE);
+                    if (component != null) {
+                        return component.charge() != component.maxCharge();
+                    }
+                }
             }
+            return false;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return slot == 1 ? 1 : super.getSlotLimit(slot);
         }
 
         @Override
@@ -120,18 +133,19 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity imple
 
     public void chargeItem() {
         // charge inserted chargeable item
-        ItemStack stack = storage.getStackInSlot(1);
-        if (stack.getItem() instanceof ChargeHolder chargeHolder) {
-            chargeHolder.insertCharge(stack, CHARGE_RATE);
+        ItemStack stack = getChargeSlot();
+        ChargeComponent component = stack.get(ModComponents.CHARGE);
+        if (component != null) {
+            stack.set(ModComponents.CHARGE, component.add(Math.min(CHARGE_RATE, component.maxCharge() - component.charge())));
         }
+    }
+
+    public @NotNull ItemStack getChargeSlot() {
+        return storage.getStackInSlot(1);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, ExcitationDynamoBlockEntity be) {
         if (level.isClientSide) {
-            if (be.isBoiling()) {
-                // sound and animation stuff?
-                level.playSound(null, pos, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1f, 1f);
-            }
             return;
         }
 
@@ -140,19 +154,21 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity imple
             be.fuelBurning--;
             // Evaporate water up to WATER_RATE
             int evaporated = be.waterTank.drain(WATER_RATE, IFluidHandler.FluidAction.EXECUTE).getAmount();
+            RandomSource random = level.random;
             if (evaporated >= WATER_RATE) { // If WATER_RATE was evaporated, charge item
                 be.chargeItem();
+                if (be.soundCooldown <= 0) {
+                    level.playSound(null, pos, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS);
+                    be.soundCooldown = random.nextInt(10, 30);
+                }
             } else if (evaporated > 0) { // If less than WATER_RATE, but still some water evaporated
                 // make some noise to indicate it drying up
-                RandomSource random = level.random;
                 if (be.soundCooldown <= 0) {
                     level.playSound(null, pos, SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, random.nextFloat(), random.nextFloat());
-                    be.soundCooldown = random.nextInt(10, 40);
-                } else {
-                    be.soundCooldown--;
+                    be.soundCooldown = random.nextInt(30, 60);
                 }
             }
-        } else if (be.canBoil()) { // If there is fuel in storage and water in the tank
+        } else if (be.canBoil() && be.canCharge()) { // If there is fuel in storage and water in the tank
             ItemStack extracted = be.storage.extractItem(0, 1, false);
             int burnTime = extracted.getBurnTime(RecipeType.SMELTING);
             be.fuelBurning = burnTime;
@@ -161,7 +177,13 @@ public class ExcitationDynamoBlockEntity extends MultiblockCoreBlockEntity imple
         } else {
             be.setBoiling(false);
         }
+        be.soundCooldown--;
 
+    }
+
+    private boolean canCharge() {
+        ChargeComponent component = this.getChargeSlot().get(ModComponents.CHARGE);
+        return component != null && !component.isFull();
     }
 
     private boolean canBoil() {

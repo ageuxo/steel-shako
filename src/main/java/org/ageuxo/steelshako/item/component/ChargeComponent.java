@@ -22,11 +22,15 @@ public record ChargeComponent(int charge, int maxCharge) {
     );
 
     public ChargeComponent sub(int amount) {
-        return new ChargeComponent(this.charge - amount, this.maxCharge);
+        return new ChargeComponent(Math.max(this.charge - amount, 0), this.maxCharge);
     }
 
     public ChargeComponent add(int amount) {
-        return new ChargeComponent(this.charge + amount, this.maxCharge);
+        return new ChargeComponent(Math.min(this.charge + amount, this.maxCharge), this.maxCharge);
+    }
+
+    public boolean isFull() {
+        return charge() >= maxCharge();
     }
 
 

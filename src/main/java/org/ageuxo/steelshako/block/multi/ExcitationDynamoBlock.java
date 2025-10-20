@@ -99,9 +99,31 @@ public class ExcitationDynamoBlock extends BaseMultiBlockBlock {
                 serverPlayer.openMenu(state.getMenuProvider(level, corePos), buf -> buf.writeBlockPos(corePos));
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
+        } else if (part == ExcitationDynamoPart.CHARGER) {
+            ExcitationDynamoBlockEntity core = getCore(level, pos);
+            if (!level.isClientSide && core != null) {
+                ItemStack chargeSlot = core.getChargeSlot();
+                if (chargeSlot.isEmpty()) {
+                    player.setItemInHand(InteractionHand.MAIN_HAND, insertChargeItem(player, core)); // Insert item in hand
+                    return InteractionResult.PASS;
+                } else {
+                    ItemStack extracted = core.getItemCapDirect().extractItem(1, 1, false);
+                    if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
+                        player.setItemInHand(InteractionHand.MAIN_HAND, extracted); // Put in hand if possible
+                    } else {
+                        player.spawnAtLocation(extracted); // Put itemEntity at player feet
+                    }
+                    return InteractionResult.SUCCESS_NO_ITEM_USED;
+                }
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return InteractionResult.PASS;
+    }
+
+    private static @NotNull ItemStack insertChargeItem(Player player, ExcitationDynamoBlockEntity core) {
+        return core.getItemCapDirect().insertItem(1, player.getItemInHand(InteractionHand.MAIN_HAND), false);
     }
 
     @Override
@@ -138,6 +160,20 @@ public class ExcitationDynamoBlock extends BaseMultiBlockBlock {
                     }
                 }
             }
+        } else if (part == ExcitationDynamoPart.CHARGER || part == ExcitationDynamoPart.CORE) {
+            ExcitationDynamoBlockEntity core = getCore(level, pos);
+            if (!level.isClientSide && core != null) {
+                ItemStack chargeSlot = core.getChargeSlot();
+                if (chargeSlot.isEmpty()) {
+                    player.setItemInHand(InteractionHand.MAIN_HAND, insertChargeItem(player, core)); // Insert item in hand
+                    return ItemInteractionResult.SUCCESS;
+                } else {
+                    ItemStack extracted = core.getItemCapDirect().extractItem(1, 1, false);
+                    player.spawnAtLocation(extracted); // Put itemEntity at player feet
+                    return ItemInteractionResult.CONSUME;
+                }
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
