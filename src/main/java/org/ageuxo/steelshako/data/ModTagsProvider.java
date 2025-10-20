@@ -12,7 +12,6 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.ageuxo.steelshako.ModTags;
-import org.ageuxo.steelshako.block.ModBlocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
