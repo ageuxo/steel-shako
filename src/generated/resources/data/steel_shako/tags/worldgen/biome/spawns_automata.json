@@ -1,0 +1,8 @@
+{
+  "remove": [
+    "minecraft:mushroom_fields"
+  ],
+  "values": [
+    "#c:is_overworld"
+  ]
+}

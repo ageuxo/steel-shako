@@ -5,10 +5,10 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.ageuxo.steelshako.ModTags;
@@ -70,7 +70,10 @@ public class ModTagsProvider {
         @Override
         protected void addTags(HolderLookup.@NotNull Provider provider) {
             this.tag(ModTags.HAS_MANGALAN_SPRINGS)
-                    .addTag(BiomeTags.IS_OVERWORLD);
+                    .addTag(Tags.Biomes.IS_OVERWORLD);
+            this.tag(ModTags.SPAWNS_AUTOMATA)
+                    .addTag(Tags.Biomes.IS_OVERWORLD)
+                    .remove(net.minecraft.world.level.biome.Biomes.MUSHROOM_FIELDS);
         }
     }
 }

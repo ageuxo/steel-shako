@@ -16,4 +16,5 @@ public class ModTags {
     public static final TagKey<EntityType<?>> AUTOMATON_MOB_TARGETS = TagKey.create(Registries.ENTITY_TYPE, SteelShakoMod.modRL("automaton_mob_targets"));
 
     public static final TagKey<Biome> HAS_MANGALAN_SPRINGS = TagKey.create(Registries.BIOME, SteelShakoMod.modRL("has_mangalan_springs"));
+    public static final TagKey<Biome> SPAWNS_AUTOMATA = TagKey.create(Registries.BIOME, SteelShakoMod.modRL("spawns_automata"));
 }
