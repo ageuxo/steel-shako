@@ -34,6 +34,7 @@ public class SteelShakoMod {
         ModMenuTypes.MENUS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);
+        ModSounds.SOUNDS.register(modEventBus);
         modEventBus.addListener(DataProviders::registerDataProviders);
         modEventBus.addListener(ModPayloads::register);
         modEventBus.addListener(ModFluids::registerFluids);

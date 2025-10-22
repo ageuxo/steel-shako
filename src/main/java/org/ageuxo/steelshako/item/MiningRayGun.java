@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -26,6 +27,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.ageuxo.steelshako.ModDamageTypes;
+import org.ageuxo.steelshako.ModSounds;
 import org.ageuxo.steelshako.attachment.MiningRayCache;
 import org.ageuxo.steelshako.attachment.ModAttachments;
 import org.ageuxo.steelshako.item.component.ChargeComponent;
@@ -45,10 +47,12 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
 
 public class MiningRayGun extends Item implements GeoItem {
-    public static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final WeakHashMap<Entity, Long> RAY_SOUND_COOLDOWNS = new WeakHashMap<>();
     public static int RAMPUP_TIME = 30;
     public static int RAY_TICK_CHARGE_COST = 10;
     public static int RAY_RANGE = 40;
@@ -66,15 +70,11 @@ public class MiningRayGun extends Item implements GeoItem {
 
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
-        var player = context.getPlayer();
-        var usedHand = context.getHand();
-        var level = context.getLevel();
+        Player player = context.getPlayer();
+        InteractionHand usedHand = context.getHand();
+        Level level = context.getLevel();
         if (player != null && player.getUseItem().getItem() != this){
-            player.startUsingItem(usedHand);
-            if (level instanceof ServerLevel serverLevel) {
-                level.playSound(player, player.blockPosition(), ModSounds.RAY_STARTUP.get(), SoundSource.PLAYERS);
-                triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
-            }
+            startFiring(level, player, usedHand);
         }
         return InteractionResult.CONSUME;
     }
@@ -82,12 +82,17 @@ public class MiningRayGun extends Item implements GeoItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
         if (player.getUseItem().getItem() != this){
-            player.startUsingItem(usedHand);
-            if (level instanceof ServerLevel serverLevel) {
-                triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
-            }
+            startFiring(level, player, usedHand);
         }
         return InteractionResultHolder.fail(player.getItemInHand(usedHand)); // Fail here works like consume does in other interaction methods
+    }
+
+    private void startFiring(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
+        player.startUsingItem(usedHand);
+        level.playSound(player, player.blockPosition(), ModSounds.RAY_STARTUP.get(), SoundSource.PLAYERS, 1f, 1f);
+        if (level instanceof ServerLevel serverLevel) {
+            triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
+        }
     }
 
     @Override
@@ -184,9 +189,11 @@ public class MiningRayGun extends Item implements GeoItem {
     @Override
     public void onStopUsing(@NotNull ItemStack stack, @NotNull LivingEntity entity, int count) {
         stack.set(ModComponents.RAY_RAMPUP, 0);
-        if (entity.level() instanceof ServerLevel serverLevel){
+        Level level = entity.level();
+        if (level instanceof ServerLevel serverLevel){
             triggerAnim(entity, GeoItem.getOrAssignId(stack, serverLevel), "firing", "spin_down");
         }
+        level.playSound(entity, entity.blockPosition(), ModSounds.RAY_FIRE_END.get(), SoundSource.PLAYERS, 1f, 1f);
     }
 
     @Override
@@ -242,4 +249,16 @@ public class MiningRayGun extends Item implements GeoItem {
             }
         });
     }
+
+    private static final int RAY_SOUND_INTERVAL = 320;
+
+    public static void playSoundAtInterval(Level level, LivingEntity livingEntity) {
+        Long timestamp = RAY_SOUND_COOLDOWNS.getOrDefault(livingEntity, 0L);
+        if (level.getGameTime() - timestamp >= RAY_SOUND_INTERVAL) {
+            level.playSound(null, livingEntity.blockPosition(), ModSounds.RAY_FIRE_SUSTAIN.get(), SoundSource.PLAYERS, 1f, 1);
+            RAY_SOUND_COOLDOWNS.put(livingEntity, level.getGameTime());
+        }
+
+    }
+
 }

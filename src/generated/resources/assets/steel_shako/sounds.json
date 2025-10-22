@@ -1,0 +1,38 @@
+{
+  "ray_fire": {
+    "sounds": [
+      {
+        "name": "steel_shako:ray_fire_sustain",
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitle.steel_shako.ray_fire_sustain"
+  },
+  "ray_fire_end": {
+    "sounds": [
+      {
+        "name": "steel_shako:ray_fire_end",
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitle.steel_shako.ray_fire_end"
+  },
+  "ray_fire_start": {
+    "sounds": [
+      {
+        "name": "steel_shako:ray_fire_start",
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitle.steel_shako.ray_fire_start"
+  },
+  "ray_startup": {
+    "sounds": [
+      {
+        "name": "steel_shako:ray_startup",
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitle.steel_shako.ray_startup"
+  }
+}
