@@ -14,8 +14,6 @@ import org.ageuxo.steelshako.block.multi.MultiBlockType;
 import org.ageuxo.steelshako.item.component.ChargeComponent;
 import org.ageuxo.steelshako.item.component.ModComponents;
 
-import java.util.List;
-
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(SteelShakoMod.MOD_ID);
 
@@ -32,12 +30,5 @@ public class ModItems {
     public static final DeferredItem<BucketItem> GRUEL_BUCKET = ITEMS.registerItem("gruel_bucket", (p)-> new BucketItem(ModFluids.GRUEL.get(), p));
     public static final DeferredItem<BucketItem> MANGALAN_BUCKET = ITEMS.registerItem("mangalan_bucket", (p)-> new BucketItem(ModFluids.MANGALAN.get(), p));
 
-
-    public static List<Item> getEntries() {
-        return ITEMS.getEntries().stream()
-                .filter(i-> !i.is(RAY_PISTOL.getId()))
-                .map(i -> (Item)i.get())
-                .toList();
-    }
 
 }

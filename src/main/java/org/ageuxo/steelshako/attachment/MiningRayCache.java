@@ -48,7 +48,7 @@ public class MiningRayCache {
     public void addProgress(Level level, LivingEntity shooter, ItemStack stack, BlockPos pos) {
         int rayProgress = this.positions.getOrDefault(pos, 0);
         float destroySpeed = level.getBlockState(pos).getDestroySpeed(level, pos);
-        rayProgress += 8;
+        rayProgress += (int) Math.ceil(32f / destroySpeed);
         if (rayProgress >= 150) {
             if (!level.isClientSide){
                 destroyBlock(level, pos, true, shooter, stack, 512);

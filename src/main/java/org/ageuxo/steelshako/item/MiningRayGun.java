@@ -28,13 +28,10 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.ageuxo.steelshako.ModDamageTypes;
 import org.ageuxo.steelshako.attachment.MiningRayCache;
 import org.ageuxo.steelshako.attachment.ModAttachments;
-import org.ageuxo.steelshako.charge.ChargeHolder;
 import org.ageuxo.steelshako.item.component.ChargeComponent;
 import org.ageuxo.steelshako.item.component.ModComponents;
 import org.ageuxo.steelshako.network.RayBeamPayload;
 import org.ageuxo.steelshako.render.geo.MiningRayGunRenderer;
-import org.ageuxo.steelshako.render.particle.ModParticles;
-import org.ageuxo.steelshako.render.particle.VectorOption;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -75,6 +72,7 @@ public class MiningRayGun extends Item implements GeoItem {
         if (player != null && player.getUseItem().getItem() != this){
             player.startUsingItem(usedHand);
             if (level instanceof ServerLevel serverLevel) {
+                level.playSound(player, player.blockPosition(), ModSounds.RAY_STARTUP.get(), SoundSource.PLAYERS);
                 triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(usedHand), serverLevel), "firing", "spin_up");
             }
         }
@@ -100,12 +98,12 @@ public class MiningRayGun extends Item implements GeoItem {
     protected void tickBeam(@NotNull Level level, @NotNull LivingEntity livingEntity, @NotNull ItemStack stack) {
         int rampup = stack.getOrDefault(ModComponents.RAY_RAMPUP, 0);
         if (rampup > RAMPUP_TIME) {
-            ItemStack chargeHolder = getChargeHolderInInventory(livingEntity);
-            if (chargeHolder != null) {
-                ChargeComponent component = chargeHolder.get(ModComponents.CHARGE.get());
-                if (component != null && component.charge() >= RAY_TICK_CHARGE_COST) {
+            ItemStack withCharge = getStackWithCharge(livingEntity);
+            if (withCharge != null) {
+                ChargeComponent component = withCharge.get(ModComponents.CHARGE.get());
+                if (component != null && component.charge() >= RAY_TICK_CHARGE_COST && level.getGameTime() % 3 == 0) {
                     doBeam(level, livingEntity, stack);
-                    chargeHolder.set(ModComponents.CHARGE.get(), component.sub(RAY_TICK_CHARGE_COST)); // subtract charge, replace component
+                    withCharge.set(ModComponents.CHARGE.get(), component.sub(RAY_TICK_CHARGE_COST)); // subtract charge, replace component
                     if (level instanceof ServerLevel serverLevel) {
                         triggerAnim(livingEntity, GeoItem.getOrAssignId(stack, serverLevel), "firing", "spinning");
                     }
@@ -117,12 +115,13 @@ public class MiningRayGun extends Item implements GeoItem {
 
     }
 
-    protected @Nullable ItemStack getChargeHolderInInventory(LivingEntity entity) {
+    protected @Nullable ItemStack getStackWithCharge(LivingEntity entity) {
         IItemHandler handler = entity.getCapability(Capabilities.ItemHandler.ENTITY);
         if (handler != null) {
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack stack = handler.getStackInSlot(i);
-                if (stack.getItem() instanceof ChargeHolder) {
+                ChargeComponent component = stack.get(ModComponents.CHARGE);
+                if (component != null && component.charge() >= RAY_TICK_CHARGE_COST) {
                     return stack;
                 }
             }
@@ -157,18 +156,21 @@ public class MiningRayGun extends Item implements GeoItem {
         } else if (hitResult.getType() != HitResult.Type.MISS){ // If hit block, do mining
             rayEnd = hitResult.getLocation();
             BlockPos hitPos = hitResult.getBlockPos();
-            LOGGER.debug("ray end: {}, hit pos: {}", rayEnd, hitPos);
+//            LOGGER.debug("ray end: {}, hit pos: {}", rayEnd, hitPos);
             LevelChunk chunk = level.getChunkAt(hitPos);
-            MiningRayCache rayCache = chunk.getData(ModAttachments.MINING_RAY_CACHE);
-            rayCache.addProgress(level, shooter, stack, hitPos);
-            LOGGER.debug("Adding progress to {}, heat: {}", hitPos, rayCache.blockHeat(hitPos));
-            chunk.setData(ModAttachments.MINING_RAY_CACHE, rayCache);
+            addMiningProgress(level, shooter, stack, chunk, hitPos);
         }
-        if (level.isClientSide){
-            level.addParticle(new VectorOption(ModParticles.RED_RAY_BEAM.get(), rayEnd.toVector3f()), eyePos.x, eyePos.y, eyePos.z, rayEnd.x, rayEnd.y, rayEnd.z);
-        } else {
+        if (!level.isClientSide) {
             PacketDistributor.sendToPlayersTrackingEntityAndSelf(shooter, new RayBeamPayload(shooter.getId(), rayEnd.toVector3f(), RayBeamPayload.Colour.RED));
+            playSoundAtInterval(level, shooter);
         }
+    }
+
+    private static void addMiningProgress(@NotNull Level level, @NotNull LivingEntity shooter, @NotNull ItemStack stack, LevelChunk chunk, BlockPos hitPos) {
+        MiningRayCache rayCache = chunk.getData(ModAttachments.MINING_RAY_CACHE);
+        rayCache.addProgress(level, shooter, stack, hitPos);
+//            LOGGER.debug("Adding progress to {}, heat: {}", hitPos, rayCache.blockHeat(hitPos));
+        chunk.setData(ModAttachments.MINING_RAY_CACHE, rayCache);
     }
 
     protected boolean canHitEntity(LivingEntity shooter, Entity target) {
