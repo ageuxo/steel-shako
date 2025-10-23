@@ -1,5 +1,9 @@
 pluginManagement {
     repositories {
+        maven {
+            name "Shedaniel + Architectury"
+            url "https://maven.architectury.dev/"
+        }
         gradlePluginPortal()
     }
 }
