@@ -1,4 +1,9 @@
 {
+  "block.steel_shako.vat_block": "Gruel Vat",
+  "block.steel_shako.excitation_dynamo": "Excitation Dynamo",
+  "block.steel_shako.mangalan": "Mangalon",
+  "block.steel_shako.gruel": "Gruel",
+  "block.steel_shako.gruel_shroom": "Gruelshroom",
   "item.steel_shako.crystal": "Crystal",
   "item.steel_shako.excitation_dynamo_deployer": "Deployer: Excitation Dynamo",
   "item.steel_shako.vat_deployer": "Deployer: Gruel Vat",
