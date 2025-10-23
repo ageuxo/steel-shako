@@ -9,6 +9,7 @@
   "item.steel_shako.vacuum_tube": "Vacuum tube",
   "item.steel_shako.inert_crystal": "Inert Crystal",
   "item.steel_shako.gruel_spores": "Gruelshroom Spores",
+  "entity.steel_shako.automaton": "Automaton",
   "gui.steel_shako.boiler": "Boiler",
   "gui.steel_shako.widget.bar.fluid": "%s / %s mB",
   "itemGroup.steel_shako.main": "Steel Shako",
