@@ -19,7 +19,10 @@
   "gui.steel_shako.widget.bar.fluid": "%s / %s mB",
   "itemGroup.steel_shako.main": "Steel Shako",
   "subtitle.steel_shako.ray_startup": "Ray Charging Up",
-  "subtitle.steel_shako.ray_fire_start": "Ray Starts Firing",
+  "subtitle.steel_shako.ray_fire_start": "Ray Firing",
   "subtitle.steel_shako.ray_fire_sustain": "Ray Firing",
-  "subtitle.steel_shako.ray_fire_end": "Ray Stops Firing"
+  "subtitle.steel_shako.ray_fire_end": "Ray Fading",
+  "entity.steel_shako.automaton_hurt": "Automaton Hurt",
+  "entity.steel_shako.automaton_death": "Automaton Dies",
+  "entity.steel_shako.automaton_idle": "Automaton Clicks"
 }

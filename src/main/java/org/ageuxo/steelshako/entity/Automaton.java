@@ -4,10 +4,10 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -35,6 +35,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliat
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
+import org.ageuxo.steelshako.ModSounds;
 import org.ageuxo.steelshako.ModTags;
 import org.ageuxo.steelshako.entity.behaviour.StopAndFireAtTargetPos;
 import org.ageuxo.steelshako.item.ModItems;
@@ -44,6 +45,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.keyframe.event.builtin.AutoPlayingSoundKeyframeHandler;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -70,6 +72,7 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
 
     public Automaton(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
+        setDropChance(EquipmentSlot.MAINHAND, 0f);
     }
 
     @Override
@@ -149,7 +152,8 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
 
         AnimationController<Automaton> weapon = new AnimationController<>(this, "weapon", state -> PlayState.CONTINUE)
                 .triggerableAnim("aim", AIM_ANIM)
-                .triggerableAnim("fire", FIRE_ANIM);
+                .triggerableAnim("fire", FIRE_ANIM)
+                .setSoundKeyframeHandler(new AutoPlayingSoundKeyframeHandler<>());
         controllers.add(weapon);
 
         AnimationController<Automaton> headLook = new AnimationController<>(this, "head_look", state -> {
@@ -165,7 +169,7 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
 
             }
             return PlayState.STOP;
-        });
+        }).setSoundKeyframeHandler(new AutoPlayingSoundKeyframeHandler<>());
         controllers.add(headLook);
     }
 
@@ -202,7 +206,8 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
     public BrainActivityGroup<? extends Automaton> getFightTasks() {
         return BrainActivityGroup.fightTasks(
                 new InvalidateAttackTarget<>(),
-                new SetWalkTargetToAttackTarget<>(),
+                new SetWalkTargetToAttackTarget<>()
+                        .closeEnoughDist(((automaton, target) -> 8)),
                 new StopAndFireAtTargetPos<>(60)
                         .whenActivating(this::fireAttack)
                         .whenStarting(this::chargeAttack)
@@ -215,12 +220,10 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
     }
 
     protected <E extends LivingEntity> void fireAttack(E e) {
-        e.level().playSound(null, e.blockPosition(), SoundEvents.ARROW_HIT, SoundSource.HOSTILE);
         triggerAnim("weapon", "fire");
     }
 
     protected <E extends LivingEntity> void chargeAttack(E e) {
-        e.level().playSound(null, e.blockPosition(), SoundEvents.CREEPER_PRIMED, SoundSource.HOSTILE);
         triggerAnim("weapon", "aim");
     }
 
@@ -230,5 +233,21 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
         if (handItem.getItem() instanceof RangedTargetWeapon weapon) {
             weapon.shoot(this, handItem);
         }
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.AUTOMATON_DEATH.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return ModSounds.AUTOMATON_HURT.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return super.getAmbientSound();
     }
 }

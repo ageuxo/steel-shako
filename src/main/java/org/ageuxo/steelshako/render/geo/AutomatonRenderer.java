@@ -16,7 +16,9 @@ public class AutomatonRenderer extends GeoEntityRenderer<Automaton> {
     public AutomatonRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new AutomatonModel());
         addRenderLayer(
-                new HandLayer<>(this, "pistol_holder", "left_arm"));
+                new HandLayer<>(this, "pistol_holder", "left_arm")
+        );
+
     }
 
     public static class HandLayer<E extends LivingEntity & GeoAnimatable> extends BlockAndItemGeoLayer<E> {

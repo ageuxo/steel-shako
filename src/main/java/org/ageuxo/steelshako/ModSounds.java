@@ -15,6 +15,10 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RAY_FIRE_SUSTAIN = register("ray_fire");
     public static final DeferredHolder<SoundEvent, SoundEvent> RAY_FIRE_END = register("ray_fire_end");
 
+    public static final DeferredHolder<SoundEvent, SoundEvent> AUTOMATON_HURT = register("automaton_hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AUTOMATON_DEATH = register("automaton_death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AUTOMATON_IDLE = register("automaton_idle");
+
     private static @NotNull DeferredHolder<SoundEvent, SoundEvent> register(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(SteelShakoMod.modRL(name)));
     }
