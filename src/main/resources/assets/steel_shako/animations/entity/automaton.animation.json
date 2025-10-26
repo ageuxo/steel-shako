@@ -109,6 +109,11 @@
 				"left_leg3": {
 					"rotation": [62.5, 0, 0]
 				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "steel_shako:ray_startup"
+				}
 			}
 		},
 		"aim": {
@@ -219,6 +224,14 @@
 				},
 				"left_leg3": {
 					"rotation": [62.5, 0, 0]
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "steel_shako:ray_fire_start"
+				},
+				"0.374": {
+					"effect": "steel_shako:ray_fire_end"
 				}
 			}
 		},

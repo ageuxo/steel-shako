@@ -1,4 +1,35 @@
 {
+  "automaton_death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.iron_golem.death",
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "entity.steel_shako.automaton_death"
+  },
+  "automaton_hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.iron_golem.hurt",
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "entity.steel_shako.automaton_hurt"
+  },
+  "automaton_idle": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.lever.click",
+        "pitch": 2.0,
+        "volume": 0.2
+      }
+    ],
+    "subtitle": "entity.steel_shako.automaton_idle"
+  },
   "ray_fire": {
     "sounds": [
       {
