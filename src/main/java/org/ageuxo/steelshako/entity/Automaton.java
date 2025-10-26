@@ -70,6 +70,7 @@ public class Automaton extends Monster implements SmartBrainOwner<Automaton>, Ge
 
     public Automaton(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
+        setDropChance(EquipmentSlot.MAINHAND, 0f);
     }
 
     @Override

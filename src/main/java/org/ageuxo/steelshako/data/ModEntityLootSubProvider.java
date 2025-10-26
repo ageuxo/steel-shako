@@ -9,6 +9,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -33,6 +34,7 @@ public class ModEntityLootSubProvider extends EntityLootSubProvider {
                                         .setRolls(ConstantValue.exactly(1))
                                         .add(
                                                 LootItem.lootTableItem(ModItems.VACUUM_TUBE)
+                                                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
                                                         .apply(SetItemCountFunction.setCount(UniformGenerator.between(0, 1)))
                                                         .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0, 1)))
                                         )
