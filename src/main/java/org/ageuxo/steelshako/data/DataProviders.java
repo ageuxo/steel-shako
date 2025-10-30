@@ -77,15 +77,20 @@ public class DataProviders {
         );
 
         // DataPack object provider
-        generator.addProvider(
+        DatapackBuiltinEntriesProvider dataPackProvider = generator.addProvider(
                 event.includeServer(),
-                (DataProvider.Factory<DatapackBuiltinEntriesProvider>) out -> new DatapackBuiltinEntriesProvider(out, lookupProvider, new RegistrySetBuilder()
+                new DatapackBuiltinEntriesProvider(output, lookupProvider, new RegistrySetBuilder()
                         .add(Registries.DAMAGE_TYPE, ModDamageTypes::addDamageTypes)
                         .add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap)
                         .add(Registries.PLACED_FEATURE, ModPlacements::bootstrap)
                         .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap),
                         Set.of(SteelShakoMod.MOD_ID)
                 )
+        );
+
+        // Needs dataPack objects in its lookupProvider
+        generator.addProvider(
+                event.includeServer(), new ModTagsProvider.DamageTypes(output, dataPackProvider.getRegistryProvider(), SteelShakoMod.MOD_ID, fileHelper)
         );
     }
 
