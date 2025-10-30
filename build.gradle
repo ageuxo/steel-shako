@@ -17,7 +17,7 @@ tasks.named('wrapper', Wrapper).configure {
 
 var secrets = new Properties()
 secrets.load(file(rootDir.getPath() + '/secrets.properties').newReader())
-
+var changes = resources.text.fromFile(rootDir.getPath() + '/changes.md').asString()
 
 version = mod_version
 group = mod_group_id
@@ -178,6 +178,8 @@ unifiedPublishing {
         gameLoaders = ["neoforge"]
 
         mainPublication jar
+
+        changelog = changes
 
         relations {
             depends {
