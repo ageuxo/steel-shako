@@ -157,7 +157,11 @@ public class MiningRayGun extends Item implements GeoItem {
                     null,
                     shooter
             );
-            entityHitResult.getEntity().hurt(damageSource, 0.001f); // TODO replace with setting on fire?
+            Entity hitEntity = entityHitResult.getEntity();
+            hitEntity.hurt(damageSource, 0.001f);
+            if (!hitEntity.fireImmune()) {
+                hitEntity.igniteForSeconds(3.0F);
+            }
         } else if (hitResult.getType() != HitResult.Type.MISS){ // If hit block, do mining
             rayEnd = hitResult.getLocation();
             BlockPos hitPos = hitResult.getBlockPos();

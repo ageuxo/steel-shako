@@ -36,6 +36,7 @@ import java.util.function.Predicate;
 public class RayPistol extends ProjectileWeaponItem implements RangedTargetWeapon, GeoItem {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+    public static final float DAMAGE = 8f;
     private final AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
 
     public RayPistol(Properties properties) {
@@ -81,7 +82,11 @@ public class RayPistol extends ProjectileWeaponItem implements RangedTargetWeapo
                     null,
                     shooter
             );
-            entityHitResult.getEntity().hurt(damageSource, 3f);
+            Entity hitEntity = entityHitResult.getEntity();
+            hitEntity.hurt(damageSource, DAMAGE);
+            if (!hitEntity.fireImmune()) {
+                hitEntity.igniteForSeconds(3.0F);
+            }
         } else if (hitResult.getType() != HitResult.Type.MISS) { // If hit block, do nothing
             rayEnd = hitResult.getLocation();
         }

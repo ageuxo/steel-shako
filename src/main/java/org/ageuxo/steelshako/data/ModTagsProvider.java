@@ -3,14 +3,17 @@ package org.ageuxo.steelshako.data;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
+import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.ageuxo.steelshako.ModDamageTypes;
 import org.ageuxo.steelshako.ModTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -74,6 +77,19 @@ public class ModTagsProvider {
             this.tag(ModTags.SPAWNS_AUTOMATA)
                     .addTag(Tags.Biomes.IS_OVERWORLD)
                     .remove(net.minecraft.world.level.biome.Biomes.MUSHROOM_FIELDS);
+        }
+    }
+
+    public static class DamageTypes extends DamageTypeTagsProvider {
+
+        public DamageTypes(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, lookupProvider, modId, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.@NotNull Provider provider) {
+            this.tag(DamageTypeTags.BYPASSES_ARMOR)
+                    .add(ModDamageTypes.MINING_RAY);
         }
     }
 }
